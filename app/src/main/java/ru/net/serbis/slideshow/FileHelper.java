@@ -1,0 +1,74 @@
+package ru.net.serbis.slideshow;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+public class FileHelper
+{
+    private static final List<String> EXTENSIONS = Arrays.asList("png", "jpg", "jpeg", "gif");
+
+    private FileHelper()
+    {
+    }
+
+    private static String getExt(File file)
+    {
+        return getExt(file.getName());
+    }
+
+    private static String getExt(String fileName)
+    {
+        String ext = "";
+        int i = fileName.lastIndexOf('.');
+        if (i > 0)
+        {
+            ext = fileName.substring(i + 1).toLowerCase();
+        }
+        return ext;
+    }
+
+    public static void initWallpapers(String storage, List<String> fileNames)
+    {
+        initWallpapers(new File(storage), fileNames);
+    }
+
+    public static void initWallpapers(File storage, List<String> fileNames)
+    {
+        if (storage.exists() && storage.isDirectory() && storage.canRead())
+        {
+            File wallpapers = new File(storage, "Wallpapers");
+            if (wallpapers.exists() && wallpapers.isDirectory() && wallpapers.canRead())
+            {
+                initFileNames(wallpapers, fileNames);
+            }
+        }
+    }
+
+    private static void initFileNames(File dir, List<String> fileNames)
+    {
+        File[] files = dir.listFiles();
+        if (files != null)
+        {
+            for (File file : files)
+            {
+                if (file.isDirectory())
+                {
+                    initFileNames(file, fileNames);
+                }
+                else
+                {
+                    if (EXTENSIONS.contains(getExt(file)))
+                    {
+                        fileNames.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+    }
+
+    public static boolean exist(String fileName)
+    {
+        return fileName != null && new File(fileName).exists();
+    }
+}
