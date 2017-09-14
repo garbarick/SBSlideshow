@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:id="@+id/add_system_folder"
+        android:title="@string/add_system_folder"/>
+    <item
+        android:id="@+id/add_sbmega_folder"
+        android:title="@string/add_sbmega_folder"/>
+    
+</menu>

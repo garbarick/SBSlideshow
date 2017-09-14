@@ -1,14 +1,14 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.activity;
 
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
+import android.app.*;
+import android.appwidget.*;
 import android.content.*;
-import android.net.Uri;
-import android.view.View;
-import android.widget.RemoteViews;
-
+import android.net.*;
+import android.view.*;
+import android.widget.*;
 import java.util.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.service.*;
 
 public class Widget extends AppWidgetProvider
 {
@@ -49,7 +49,7 @@ public class Widget extends AppWidgetProvider
             Action action = Action.getAction(intent.getAction());
             if (action != null)
             {
-                Service service = Service.getInstance();
+                ImageService service = ImageService.getInstance();
                 if (service != null)
                 {
                     service.getRunner().runActionInThread(action);

@@ -1,16 +1,16 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.service;
 
-import android.graphics.Canvas;
-import android.service.wallpaper.WallpaperService;
-import android.view.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import android.content.*;
+import android.graphics.*;
+import android.service.wallpaper.*;
+import android.view.*;
+import java.util.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.image.*;
 
-public class Service extends WallpaperService
+public class ImageService extends WallpaperService
 {
-    private static volatile Service instance;
+    private static volatile ImageService instance;
 
     private List<SlideShowEngine> engines = new ArrayList<SlideShowEngine>();
     private SlideShowRunner runner = new SlideShowRunner(this);
@@ -24,7 +24,7 @@ public class Service extends WallpaperService
         public void onCreate(SurfaceHolder surfaceHolder)
         {
             super.onCreate(surfaceHolder);
-            doubleTapDetector = new GestureDetector(Service.this, new GestureDetector.SimpleOnGestureListener()
+            doubleTapDetector = new GestureDetector(ImageService.this, new GestureDetector.SimpleOnGestureListener()
             {
                 @Override
                 public boolean onDoubleTap(MotionEvent e)
@@ -112,7 +112,7 @@ public class Service extends WallpaperService
         }
     }
 
-    public static Service getInstance()
+    public static ImageService getInstance()
     {
         return instance;
     }

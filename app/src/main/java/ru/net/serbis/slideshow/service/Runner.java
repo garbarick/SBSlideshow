@@ -1,5 +1,8 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.service;
+
 import android.content.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.image.*;
 
 public class Runner
 {

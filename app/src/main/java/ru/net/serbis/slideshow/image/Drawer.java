@@ -1,6 +1,7 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.image;
 
 import android.graphics.*;
+import ru.net.serbis.slideshow.*;
 
 /**
  * SEBY0408

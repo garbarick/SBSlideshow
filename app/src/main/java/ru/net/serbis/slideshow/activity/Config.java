@@ -1,11 +1,12 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.activity;
 
-import android.appwidget.AppWidgetManager;
+import android.appwidget.*;
 import android.content.*;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.adapter.*;
 
 /**
  * SEBY0408

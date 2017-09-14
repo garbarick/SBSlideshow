@@ -1,8 +1,8 @@
 package ru.net.serbis.slideshow;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import ru.net.serbis.slideshow.data.*;
 
 public class FileHelper
 {
@@ -28,21 +28,15 @@ public class FileHelper
         return ext;
     }
 
-    public static void initWallpapers(String storage, List<String> fileNames)
+    public static void initWallpapers(Folder folder, List<String> fileNames)
     {
-        initWallpapers(new File(storage), fileNames);
-    }
-
-    public static void initWallpapers(File storage, List<String> fileNames)
-    {
-        if (storage.exists() && storage.isDirectory() && storage.canRead())
-        {
-            File wallpapers = new File(storage, "Wallpapers");
-            if (wallpapers.exists() && wallpapers.isDirectory() && wallpapers.canRead())
-            {
-                initFileNames(wallpapers, fileNames);
-            }
-        }
+		switch(folder.getType())
+		{
+			case DEFAULT:
+		  	case SYSTEM:
+        		initFileNames(new File(folder.getPath()), fileNames);
+				break;
+		}
     }
 
     private static void initFileNames(File dir, List<String> fileNames)

@@ -1,6 +1,6 @@
 package ru.net.serbis.slideshow.impl;
 
-import ru.net.serbis.slideshow.Widget;
+import ru.net.serbis.slideshow.activity.Widget;
 
 /**
  * SEBY0408

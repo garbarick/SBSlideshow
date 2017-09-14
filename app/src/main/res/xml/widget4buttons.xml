@@ -6,4 +6,4 @@
         android:minWidth="128dp"
         android:minHeight="32dp"
         android:updatePeriodMillis="0"
-        android:configure="ru.net.serbis.slideshow.Config"/>
+		android:configure="ru.net.serbis.slideshow.activity.Config"/>

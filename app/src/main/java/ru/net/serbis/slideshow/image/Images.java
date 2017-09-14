@@ -1,11 +1,12 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.image;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-
-import java.io.File;
+import android.content.*;
+import android.net.*;
+import java.io.*;
 import java.util.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.db.*;
 
 /**
  * SEBY0408
@@ -24,21 +25,12 @@ public class Images
     public void init()
     {
         List<String> files = new ArrayList<String>();
-        Set<String> dirs = new LinkedHashSet<String>();
-        for (String env : Arrays.asList(
-            "EXTERNAL_STORAGE",
-            "SECONDARY_STORAGE",
-            "SECOND_VOLUME_STORAGE"))
+        for (Folder folder : db.getFolders())
         {
-            String dir = System.getenv(env);
-            if (dir != null && dir.length() > 0 && !dirs.contains(dir))
-            {
-                dirs.add(dir);
-                FileHelper.initWallpapers(dir, files);
-            }
+        	FileHelper.initWallpapers(folder, files);
         }
         Collections.shuffle(files);
-        db.init(files);
+        db.initFiles(files);
     }
 
     public void next()

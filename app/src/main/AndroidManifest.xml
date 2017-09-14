@@ -9,7 +9,7 @@
     <application android:icon="@drawable/app"
                  android:label="@string/app_name">
 
-        <service android:name=".Service"
+        <service android:name=".service.ImageService"
                  android:enabled="true"
                  android:icon="@drawable/app"
                  android:label="@string/app_name"
@@ -105,10 +105,21 @@
             </meta-data>
         </receiver>
 
-        <activity android:name=".Config">
+        <activity android:name=".activity.Config">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
+        </activity>
+		
+		<activity
+            android:name=".activity.Settings"
+            android:label="@string/app_name">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
         </activity>
 
     </application>
