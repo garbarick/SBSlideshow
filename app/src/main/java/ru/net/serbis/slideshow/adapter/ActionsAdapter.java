@@ -5,22 +5,29 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
+import android.content.res.*;
 
 /**
  * SEBY0408
  */
-public class ActionAdapter extends ArrayAdapter<Action> implements AdapterView.OnItemClickListener
+public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.OnItemClickListener
 {
-    private Activity context;
+	private static int layoutId = R.layout.action;
+
+	private class Holder
+	{
+		private ImageView image;
+		private CheckedTextView text;
+	}
+	
     private int countChecked;
     private int maxCountChecked;
     private Map<Integer, Boolean> checked = new HashMap<Integer, Boolean>();
     private List<Integer> separators = new ArrayList<Integer>();
 
-    public ActionAdapter(Activity context, int maxCountChecked)
+    public ActionsAdapter(Activity context, int maxCountChecked)
     {
-        super(context, R.layout.action);
-        this.context = context;
+        super(context, layoutId);
         this.maxCountChecked = maxCountChecked;
         initItems();
     }
@@ -28,7 +35,7 @@ public class ActionAdapter extends ArrayAdapter<Action> implements AdapterView.O
     private void initItems()
     {
         int position = 0;
-        for (String name : context.getResources().getStringArray(R.array.actions))
+        for (String name : getContext().getResources().getStringArray(R.array.actions))
         {
             Action action = Action.getAction(name);
             if (action != null)
@@ -107,19 +114,26 @@ public class ActionAdapter extends ArrayAdapter<Action> implements AdapterView.O
     @Override
     public View getView(int position, View view, ViewGroup parent)
     {
-        if (view == null)
-        {
-            view = context.getLayoutInflater().inflate(R.layout.action, null, true);
-        }
+		Holder holder;
+		if (view == null)
+		{
+			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
+			holder = new Holder();
+			holder.image = (ImageView) view.findViewById(R.id.image);
+			holder.text = (CheckedTextView) view.findViewById(R.id.text);
+
+			view.setTag(holder);
+		}
+		else
+		{
+			holder = (Holder) view.getTag();
+		}
 
         Action action = getItem(position);
 
-        CheckedTextView checkText = (CheckedTextView) view.findViewById(R.id.text);
-        checkText.setText(action.getName());
-        checkText.setChecked(checked.get(position));
-
-        ImageView imageView = (ImageView) view.findViewById(R.id.image);
-        imageView.setImageResource(action.getResource());
+		holder.text.setText(action.getName());
+        holder.text.setChecked(checked.get(position));
+        holder.image.setImageResource(action.getResource());
 
         return view;
     }

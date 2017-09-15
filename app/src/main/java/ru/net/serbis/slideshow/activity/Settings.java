@@ -1,18 +1,22 @@
 package ru.net.serbis.slideshow.activity;
 
 import android.app.*;
+import android.content.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.mega.*;
 
 public class Settings extends Activity
 {
 	private ListView list;
-	private ArrayAdapter<Folder> adapter;
+	private FoldersAdapter adapter;
 	private DBHelper db;
+	private MegaConnection connection = new MegaConnection();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -22,7 +26,7 @@ public class Settings extends Activity
 		
 		db = new DBHelper(this);
 		list = (ListView) findViewById(R.id.list);
-		adapter = new ArrayAdapter<Folder>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+		adapter = new FoldersAdapter(this);
 		list.setAdapter(adapter);
 		adapter.addAll(db.getFolders());
 		
@@ -34,6 +38,9 @@ public class Settings extends Activity
 	{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.folders, menu);
+		
+		menu.findItem(R.id.add_sbmega_folder).setEnabled(connection.isBound());
+		
 		return true;
 	}
 	
@@ -43,9 +50,13 @@ public class Settings extends Activity
         if (view.getId() == R.id.list)
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(adapter.getItem(info.position).getPath());
+			Folder folder = adapter.getItem(info.position);
+            
+			menu.setHeaderTitle(folder.getPath());
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.folder, menu);
+			
+			menu.findItem(R.id.exclude_folder).setEnabled(!FolderType.DEFAULT.equals(folder.getType()));
         }
     }
 	
@@ -84,5 +95,24 @@ public class Settings extends Activity
 				return true;
 		}
         return false;
+    }
+	
+	@Override
+    protected void onStart()
+    {
+        super.onStart();
+        Intent intent = new Intent();
+		intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if (connection.isBound())
+        {
+            unbindService(connection);
+        }
     }
 }

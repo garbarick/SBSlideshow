@@ -6,8 +6,6 @@ import ru.net.serbis.slideshow.data.*;
 
 public class FileHelper
 {
-    private static final List<String> EXTENSIONS = Arrays.asList("png", "jpg", "jpeg", "gif");
-
     private FileHelper()
     {
     }
@@ -52,7 +50,7 @@ public class FileHelper
                 }
                 else
                 {
-                    if (EXTENSIONS.contains(getExt(file)))
+                    if (Constants.EXTENSIONS.contains(getExt(file)))
                     {
                         fileNames.add(file.getAbsolutePath());
                     }

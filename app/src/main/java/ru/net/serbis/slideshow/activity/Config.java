@@ -16,7 +16,7 @@ public class Config extends android.app.Activity
     private int widgetId;
     private Button createWidget;
     private ListView items;
-    private ActionAdapter actionAdapter;
+    private ActionsAdapter actionAdapter;
     private Widget widget;
 
     @Override
@@ -37,7 +37,7 @@ public class Config extends android.app.Activity
 
     private void initButtons()
     {
-        actionAdapter = new ActionAdapter(this, widget.count);
+        actionAdapter = new ActionsAdapter(this, widget.count);
         items.setAdapter(actionAdapter);
         items.setOnItemClickListener(actionAdapter);
     }
@@ -48,7 +48,7 @@ public class Config extends android.app.Activity
         {
             public void onClick(View view)
             {
-                SharedPreferences.Editor preferences = getSharedPreferences(Widget.WIDGET_PREFERENCE, MODE_WORLD_WRITEABLE).edit();
+                SharedPreferences.Editor preferences = getSharedPreferences(Constants.WIDGET_PREFERENCE, MODE_WORLD_WRITEABLE).edit();
                 preferences.putString(String.valueOf(widgetId), actionAdapter.getCheckedActions().toString());
                 preferences.commit();
 
@@ -62,7 +62,6 @@ public class Config extends android.app.Activity
             }
         });
     }
-
 
     public Widget getWidget(Context context, int widgetId)
     {

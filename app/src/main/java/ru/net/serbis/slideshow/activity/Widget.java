@@ -12,8 +12,6 @@ import ru.net.serbis.slideshow.service.*;
 
 public class Widget extends AppWidgetProvider
 {
-    public static final String WIDGET_PREFERENCE = "widget_preference";
-    private static final List<Integer> VIEWS = Arrays.asList(R.id.id1, R.id.id2, R.id.id3, R.id.id4, R.id.id5, R.id.id6, R.id.id7);
     protected int count;
 
     @Override
@@ -71,7 +69,7 @@ public class Widget extends AppWidgetProvider
     {
         super.onDeleted(context, widgetIds);
 
-        SharedPreferences.Editor preferences = context.getSharedPreferences(WIDGET_PREFERENCE, Context.MODE_WORLD_WRITEABLE).edit();
+        SharedPreferences.Editor preferences = context.getSharedPreferences(Constants.WIDGET_PREFERENCE, Context.MODE_WORLD_WRITEABLE).edit();
         for (int widgetId : widgetIds)
         {
             String widgetKey = String.valueOf(widgetId);
@@ -82,7 +80,7 @@ public class Widget extends AppWidgetProvider
 
     private List<String> getActions(Context context, int widgetId)
     {
-        String value = context.getSharedPreferences(WIDGET_PREFERENCE, Context.MODE_WORLD_WRITEABLE).getString(String.valueOf(widgetId), null);
+        String value = context.getSharedPreferences(Constants.WIDGET_PREFERENCE, Context.MODE_WORLD_WRITEABLE).getString(String.valueOf(widgetId), null);
         if (value != null && value.length() > 0)
         {
             value = value.replaceAll("^\\[", "").replaceAll("\\]$", "");
@@ -107,7 +105,7 @@ public class Widget extends AppWidgetProvider
                 Action action = Action.getAction(name);
                 if (action != null)
                 {
-                    int viewId = VIEWS.get(indexViewId);
+                    int viewId = Constants.VIEWS.get(indexViewId);
                     views.setImageViewResource(viewId, action.getResource());
                     views.setViewVisibility(viewId, View.VISIBLE);
                     setAction(context, views, viewId, action);
@@ -119,9 +117,9 @@ public class Widget extends AppWidgetProvider
                 }
             }
 
-            for (; indexViewId < VIEWS.size(); indexViewId++)
+            for (; indexViewId < Constants.VIEWS.size(); indexViewId++)
             {
-                int viewId = VIEWS.get(indexViewId);
+                int viewId = Constants.VIEWS.get(indexViewId);
                 views.setViewVisibility(viewId, View.GONE);
             }
 
