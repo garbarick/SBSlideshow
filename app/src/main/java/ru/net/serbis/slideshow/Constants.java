@@ -9,6 +9,9 @@ public interface Constants
 	String MEGA_PACKAGE = "ru.net.serbis.mega";
 	String MEGA_SERVICE = "ru.net.serbis.mega.service.FilesService";
 	
+	String TYPE = Constants.class.getPackage().getName();
+	String ACTION = TYPE + ".ACTION";
+	
 	List<Integer> VIEWS = Arrays.asList
 	(
 		new Integer[]

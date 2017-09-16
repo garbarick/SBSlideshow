@@ -9,7 +9,7 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
-import ru.net.serbis.slideshow.mega.*;
+import ru.net.serbis.slideshow.connection.*;
 
 public class Settings extends Activity
 {
@@ -101,9 +101,16 @@ public class Settings extends Activity
     protected void onStart()
     {
         super.onStart();
-        Intent intent = new Intent();
-		intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+		try
+		{
+			Intent intent = new Intent();
+			intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
+			bindService(intent, connection, Context.BIND_AUTO_CREATE);
+		}
+		catch (Throwable e)
+		{
+			Log.info(this, e.getMessage());
+		}
     }
 
     @Override

@@ -136,6 +136,13 @@ public class ImageService extends WallpaperService
         super.onDestroy();
         instance = null;
     }
+
+	@Override
+	public void onTaskRemoved(Intent rootIntent)
+	{
+		super.onTaskRemoved(rootIntent);
+		instance = null;
+	}
     
     private void draw()
     {

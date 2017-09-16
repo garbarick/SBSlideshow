@@ -12,7 +12,7 @@ import ru.net.serbis.slideshow.service.*;
 
 public class Widget extends AppWidgetProvider
 {
-    protected int count;
+	protected int count;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager widgetManager, int[] widgetIds)
@@ -47,15 +47,7 @@ public class Widget extends AppWidgetProvider
             Action action = Action.getAction(intent.getAction());
             if (action != null)
             {
-                ImageService service = ImageService.getInstance();
-                if (service != null)
-                {
-                    service.getRunner().runActionInThread(action);
-                }
-                else
-                {
-                    new StaticRunner(context).runActionInThread(action);
-                }
+				runAction(context, action);
             }
         }
         catch (Throwable e)
@@ -86,7 +78,7 @@ public class Widget extends AppWidgetProvider
             value = value.replaceAll("^\\[", "").replaceAll("\\]$", "");
             return Arrays.asList(value.split("[ ,]+"));
         }
-        return Collections.EMPTY_LIST;
+        return Arrays.asList(new String[]{});
     }
 
     public void initWidget(Context context, int widgetId)
@@ -126,4 +118,13 @@ public class Widget extends AppWidgetProvider
             widgetManager.updateAppWidget(widgetId, views);
         }
     }
+	
+	private void runAction(Context context, Action action)
+	{
+		Intent intent = new Intent(context, ActionsService.class);
+		intent.putExtra(Constants.ACTION, action.getName());
+		
+		context.startService(intent);
+		context.sendBroadcast(intent);
+	}
 }
