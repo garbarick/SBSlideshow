@@ -12,7 +12,7 @@ public class Folders extends Table
 	{
 		super(helper);
 	}
-	
+
 	@Override
 	public void init(SQLiteDatabase db)
 	{
@@ -21,28 +21,33 @@ public class Folders extends Table
 			createTable(db);
 		}
 	}
-	
+
 	private void createTable(SQLiteDatabase db)
 	{
 		db.execSQL("create table folders(path text primary key, type text)");
 	}
-	
+
 	public void addFolder(Folder folder)
 	{
-		executeUpdate(
-			"insert into folders(path, type)" +
-			" values(?, ?)",
-			folder.getPath(),
-			folder.getType().toString());
+		if (!isExist(
+				"select 1 from folders where path = ?",
+				folder.getPath()))
+		{
+			executeUpdate(
+				"insert into folders(path, type)" +
+				" values(?, ?)",
+				folder.getPath(),
+				folder.getType().toString());
+		}
 	}
-	
+
 	public void excludeFolder(Folder folder)
 	{
 		executeUpdate(
 			"delete from folders where path = ?",
 			folder.getPath());
 	}
-	
+
 	public List<Folder> getFolders()
 	{
 		return execute(

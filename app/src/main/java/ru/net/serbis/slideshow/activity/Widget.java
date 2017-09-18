@@ -8,6 +8,7 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.service.*;
 
 public class Widget extends AppWidgetProvider
@@ -44,7 +45,7 @@ public class Widget extends AppWidgetProvider
         super.onReceive(context, intent);
         try
         {
-            Action action = Action.getAction(intent.getAction());
+            Action action = Action.get(intent.getAction());
             if (action != null)
             {
 				runAction(context, action);
@@ -87,18 +88,16 @@ public class Widget extends AppWidgetProvider
         if (!names.isEmpty())
         {
             AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-
             RemoteViews views = new RemoteViews(context.getPackageName(), widgetManager.getAppWidgetInfo(widgetId).initialLayout);
-
             int indexViewId = 0;
 
             for (String name : names)
             {
-                Action action = Action.getAction(name);
+                Action action = Action.get(name);
                 if (action != null)
                 {
                     int viewId = Constants.VIEWS.get(indexViewId);
-                    views.setImageViewResource(viewId, action.getResource());
+                    views.setImageViewResource(viewId, action.getDrawable());
                     views.setViewVisibility(viewId, View.VISIBLE);
                     setAction(context, views, viewId, action);
                     indexViewId++;
@@ -122,7 +121,7 @@ public class Widget extends AppWidgetProvider
 	private void runAction(Context context, Action action)
 	{
 		Intent intent = new Intent(context, ActionsService.class);
-		intent.putExtra(Constants.ACTION, action.getName());
+		intent.setAction(action.name());
 		
 		context.startService(intent);
 		context.sendBroadcast(intent);

@@ -6,11 +6,8 @@ import ru.net.serbis.slideshow.*;
 public interface Constants
 {
 	String WIDGET_PREFERENCE = "widget_preference";
-	String MEGA_PACKAGE = "ru.net.serbis.mega";
-	String MEGA_SERVICE = "ru.net.serbis.mega.service.FilesService";
-	
 	String TYPE = Constants.class.getPackage().getName();
-	String ACTION = TYPE + ".ACTION";
+	int CHOOSE_MEGA_FOLDER = 100;
 	
 	List<Integer> VIEWS = Arrays.asList
 	(
@@ -36,4 +33,13 @@ public interface Constants
 			"gif"
 		}
 	);
+	
+	String MEGA_PACKAGE = "ru.net.serbis.mega";
+	String MEGA_SERVICE = MEGA_PACKAGE + ".service.FilesService";
+	String MEGA_ACCOUNTS = MEGA_PACKAGE + ".activity.Accounts";
+	String MEGA_SELECT_MODE = MEGA_PACKAGE + ".SELECT_MODE";
+	String MEGA_ACTION = MEGA_PACKAGE + ".ACTION";
+	String MEGA_SELECT_PATH = MEGA_PACKAGE + ".SELECT_PATH";
+	
+	int MEGA_ACTION_SELECT_ACCOUNT_PATH = 102;
 }

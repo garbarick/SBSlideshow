@@ -108,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper
 				String wallpapers = getWallpapers(dir);
 				if (wallpapers != null)
 				{
-					result.add(new Folder(wallpapers, FolderType.DEFAULT));
+					result.add(new Folder(wallpapers, FolderType.Default));
 				}
             }
         }
@@ -132,4 +132,14 @@ public class DBHelper extends SQLiteOpenHelper
         }
 		return null;
     }
+	
+	public void addFolder(Folder folder)
+	{
+		folders.addFolder(folder);
+	}
+	
+	public void excludeFolder(Folder folder)
+	{
+		folders.excludeFolder(folder);
+	}
 }

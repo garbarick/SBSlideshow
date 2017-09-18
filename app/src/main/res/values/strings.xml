@@ -23,9 +23,21 @@
         <item>Delete</item>
     </string-array>
 	
+	<string name="action_previous">Previous</string>
+	<string name="action_next">Next</string>
+	<string name="action_separator">Separator</string>
+	<string name="action_open">Open</string>
+	<string name="action_refresh">Refresh</string>
+	<string name="action_delete">Delete</string>
+	
+	<string name="folder_type_system">system</string>
+	<string name="folder_type_mega">mega</string>
+	<string name="folder_type_default">default</string>
+	
 	<string name="wall_folders">Wallpaper Folders</string>
 	<string name="add_system_folder">Add System Folder</string>
-	<string name="add_sbmega_folder">Add SB MEGA Folder</string>
+	<string name="add_mega_folder">Add MEGA Folder</string>
 	<string name="exclude_folder">Exclude Folder</string>
+	<string name="choose_folder">Choose Folder</string>
 	
 </resources>

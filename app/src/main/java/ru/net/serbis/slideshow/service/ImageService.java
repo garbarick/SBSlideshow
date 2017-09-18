@@ -6,6 +6,7 @@ import android.service.wallpaper.*;
 import android.view.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.image.*;
 
 public class ImageService extends WallpaperService

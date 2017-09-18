@@ -30,8 +30,8 @@ public class FileHelper
     {
 		switch(folder.getType())
 		{
-			case DEFAULT:
-		  	case SYSTEM:
+			case Default:
+		  	case System:
         		initFileNames(new File(folder.getPath()), fileNames);
 				break;
 		}

@@ -5,7 +5,7 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
-import android.content.res.*;
+import ru.net.serbis.slideshow.data.*;
 
 /**
  * SEBY0408
@@ -37,7 +37,7 @@ public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.
         int position = 0;
         for (String name : getContext().getResources().getStringArray(R.array.actions))
         {
-            Action action = Action.getAction(name);
+            Action action = Action.get(name);
             if (action != null)
             {
                 add(action);
@@ -131,9 +131,9 @@ public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.
 
         Action action = getItem(position);
 
-		holder.text.setText(action.getName());
+		holder.text.setText(action.getText());
         holder.text.setChecked(checked.get(position));
-        holder.image.setImageResource(action.getResource());
+        holder.image.setImageResource(action.getDrawable());
 
         return view;
     }

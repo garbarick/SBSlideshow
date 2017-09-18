@@ -2,35 +2,46 @@ package ru.net.serbis.slideshow.activity;
 
 import android.app.*;
 import android.content.*;
+import android.net.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
+import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
-import ru.net.serbis.slideshow.connection.*;
 
 public class Settings extends Activity
 {
+	private App app;
 	private ListView list;
 	private FoldersAdapter adapter;
 	private DBHelper db;
-	private MegaConnection connection = new MegaConnection();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings);
-		
+
+		app = (App) getApplication();
 		db = new DBHelper(this);
 		list = (ListView) findViewById(R.id.list);
 		adapter = new FoldersAdapter(this);
 		list.setAdapter(adapter);
-		adapter.addAll(db.getFolders());
-		
+		initList();
+
 		registerForContextMenu(list);
+	}
+
+	private void initList()
+	{
+		adapter.setNotifyOnChange(false);
+		adapter.clear();
+		adapter.addAll(db.getFolders());
+		adapter.setNotifyOnChange(true);
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -38,12 +49,16 @@ public class Settings extends Activity
 	{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.folders, menu);
-		
-		menu.findItem(R.id.add_sbmega_folder).setEnabled(connection.isBound());
-		
 		return true;
 	}
-	
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		menu.findItem(R.id.add_mega_folder).setEnabled(app.getMegaConnection().isBound());
+		return true;
+	}
+
 	@Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo)
     {
@@ -51,15 +66,15 @@ public class Settings extends Activity
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 			Folder folder = adapter.getItem(info.position);
-            
+
 			menu.setHeaderTitle(folder.getPath());
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.folder, menu);
-			
-			menu.findItem(R.id.exclude_folder).setEnabled(!FolderType.DEFAULT.equals(folder.getType()));
+
+			menu.findItem(R.id.exclude_folder).setEnabled(!FolderType.Default.equals(folder.getType()));
         }
     }
-	
+
 	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -69,7 +84,7 @@ public class Settings extends Activity
 		}
 		return super.onOptionsItemSelected(item);
     }
-	
+
 	@Override
     public boolean onContextItemSelected(MenuItem item)
     {
@@ -80,46 +95,63 @@ public class Settings extends Activity
 		}
 		return super.onContextItemSelected(item);
     }
-	
-	public boolean onItemMenuSelected(int id, Folder item)
+
+	public boolean onItemMenuSelected(int id, Folder folder)
     {
-		switch(id)
+		switch (id)
 		{
 			case R.id.add_system_folder:
+				addSystemFolder();
 				return true;
-				
-			case R.id.add_sbmega_folder:
+
+			case R.id.add_mega_folder:
+				addMegaFolder();
 				return true;
-				
+
 			case R.id.exclude_folder:
+				db.excludeFolder(folder);
+				initList();
 				return true;
 		}
         return false;
     }
-	
-	@Override
-    protected void onStart()
-    {
-        super.onStart();
-		try
-		{
-			Intent intent = new Intent();
-			intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
-			bindService(intent, connection, Context.BIND_AUTO_CREATE);
-		}
-		catch (Throwable e)
-		{
-			Log.info(this, e.getMessage());
-		}
-    }
 
-    @Override
-    protected void onStop()
+	private void addSystemFolder()
+	{
+        new FileChooser(this, R.string.choose_folder, true)
+		{
+			public void onChoose(String path)
+			{
+				db.addFolder(new Folder(path, FolderType.System));
+				initList();
+			}
+		};
+	}
+
+	private void addMegaFolder()
+	{
+		Intent intent = new Intent();
+		intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_ACCOUNTS);
+		intent.putExtra(Constants.MEGA_SELECT_MODE, true);
+        intent.putExtra(Constants.MEGA_ACTION, Constants.MEGA_ACTION_SELECT_ACCOUNT_PATH);
+		startActivityForResult(intent, Constants.CHOOSE_MEGA_FOLDER);
+	}
+
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onStop();
-        if (connection.isBound())
+        if (RESULT_OK == resultCode)
         {
-            unbindService(connection);
-        }
+			switch (requestCode)
+			{
+				case  Constants.CHOOSE_MEGA_FOLDER:
+					{
+						String path = data.getStringExtra(Constants.MEGA_SELECT_PATH);
+						db.addFolder(new Folder(path, FolderType.Mega));
+						initList();
+					}
+					break;
+            }
+		}
     }
 }

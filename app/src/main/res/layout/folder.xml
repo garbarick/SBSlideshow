@@ -14,7 +14,8 @@
 	<TextView
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:id="@+id/type"/>
+		android:id="@+id/type"
+		android:gravity="right"/>
 
 </LinearLayout>
 

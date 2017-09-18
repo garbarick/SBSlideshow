@@ -4,7 +4,7 @@
         android:id="@+id/add_system_folder"
         android:title="@string/add_system_folder"/>
     <item
-        android:id="@+id/add_sbmega_folder"
-        android:title="@string/add_sbmega_folder"/>
+        android:id="@+id/add_mega_folder"
+        android:title="@string/add_mega_folder"/>
     
 </menu>

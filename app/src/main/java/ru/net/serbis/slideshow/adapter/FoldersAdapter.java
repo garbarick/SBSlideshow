@@ -41,7 +41,7 @@ public class FoldersAdapter extends ArrayAdapter<Folder>
 
 		Folder folder = getItem(position);
 		holder.path.setText(folder.getPath());
-		holder.type.setText(folder.getType().toString());
+		holder.type.setText(folder.getType().getText());
 		
 		return view;
 	}
