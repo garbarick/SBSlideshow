@@ -47,8 +47,13 @@ public class Files extends Table
         db.execSQL("drop table current");
     }
 	
-	public void initFiles(final List<String> files)
+	public void initFiles(final List<String> files, boolean add)
     {
+		if (add)
+		{
+			files.addAll(getFiles());
+		}
+		Collections.shuffle(files);
 		execute(
 			new Executer<Void>()
 			{
@@ -64,6 +69,29 @@ public class Files extends Table
 			"insert into current(path_id)" +
 			" select min(id) from files");
     }
+	
+	private List<String> getFiles()
+	{
+		return execute(
+			new Executer<List<String>>()
+			{
+				public List<String> execute(SQLiteDatabase db)
+				{
+					List<String> result = new ArrayList<String>();
+					Cursor cursor = db.rawQuery("select path from files", null);
+					if (cursor.moveToFirst())
+					{
+						do
+						{
+							result.add(cursor.getString(0));
+						}
+						while(cursor.moveToNext());
+					}
+					return result;
+				}
+			}
+		);
+	}
 	
 	private void initFiles(SQLiteDatabase db, List<String> files)
     {

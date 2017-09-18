@@ -12,14 +12,27 @@ public class StaticRunner extends Runner
     {
         super(context);
     }
+	
+	@Override
+    public void drawAction()
+    {
+		images.initCurrent(
+			new Maker()
+			{
+				public void make(String fileName)
+				{
+					drawAction(fileName);
+				}
+			}
+		);
+	}
 
-    @Override
-    protected void drawAction()
+    private void drawAction(String fileName)
     {
         try
         {
             WallpaperManager manager = WallpaperManager.getInstance(context);
-            File file = images.getCurrentFile();
+            File file = FileHelper.getFile(fileName);
             if (file != null)
             {
                 Bitmap bitmap = load(file);

@@ -14,4 +14,9 @@ public class Log
     {
         android.util.Log.i(object.getClass().getName(), message, e);
     }
+	
+	public static void info(Object object, Throwable e)
+    {
+        android.util.Log.i(object.getClass().getName(), "Error", e);
+    }
 }

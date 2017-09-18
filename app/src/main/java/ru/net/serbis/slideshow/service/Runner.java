@@ -90,14 +90,12 @@ public class Runner
     
     protected void previousAction()
     {
-        images.previous();
-        drawAction();
+        images.previous(this);
     }
     
     protected void nextAction()
     {
-        images.next();
-        drawAction();
+        images.next(this);
     }
     
     protected void openAction()
@@ -107,17 +105,15 @@ public class Runner
  
     protected void deleteAction()
     {
-        images.deleteCurrent();
-        drawAction();
+        images.deleteCurrent(this);
     }
     
     protected void refreshAction()
     {
-        images.init();
-        drawAction();
+        images.init(this);
     }
     
-    protected void drawAction()
+    public void drawAction()
     {
     }
 }

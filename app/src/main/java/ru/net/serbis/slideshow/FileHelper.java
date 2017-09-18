@@ -10,11 +10,6 @@ public class FileHelper
     {
     }
 
-    private static String getExt(File file)
-    {
-        return getExt(file.getName());
-    }
-
     private static String getExt(String fileName)
     {
         String ext = "";
@@ -28,13 +23,7 @@ public class FileHelper
 
     public static void initWallpapers(Folder folder, List<String> fileNames)
     {
-		switch(folder.getType())
-		{
-			case Default:
-		  	case System:
-        		initFileNames(new File(folder.getPath()), fileNames);
-				break;
-		}
+		initFileNames(new File(folder.getPath()), fileNames);
     }
 
     private static void initFileNames(File dir, List<String> fileNames)
@@ -50,7 +39,7 @@ public class FileHelper
                 }
                 else
                 {
-                    if (Constants.EXTENSIONS.contains(getExt(file)))
+                    if (checkExt(file))
                     {
                         fileNames.add(file.getAbsolutePath());
                     }
@@ -62,5 +51,24 @@ public class FileHelper
     public static boolean exist(String fileName)
     {
         return fileName != null && new File(fileName).exists();
+    }
+	
+	public static boolean checkExt(String fileName)
+	{
+		return Constants.EXTENSIONS.contains(getExt(fileName));
+	}
+	
+	public static boolean checkExt(File file)
+	{
+		return checkExt(file.getName());
+	}
+	
+	public static File getFile(String fileName)
+    {
+        if (exist(fileName))
+        {
+            return new File(fileName);
+        }
+        return null;
     }
 }

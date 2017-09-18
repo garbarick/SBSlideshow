@@ -7,6 +7,8 @@ import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.service.*;
+import android.text.*;
 
 /**
  * SEBY0408
@@ -22,66 +24,126 @@ public class Images
         this.context = context;
     }
 
-    public void init()
+    public void init(Runner runner)
     {
         List<String> files = new ArrayList<String>();
+		List<Folder> megaFolders = new ArrayList<Folder>();
         for (Folder folder : db.getFolders())
         {
-        	FileHelper.initWallpapers(folder, files);
+			switch(folder.getType())
+			{
+				case Default:
+				case System:
+					FileHelper.initWallpapers(folder, files);
+					break;
+					
+				case Mega:
+					megaFolders.add(folder);
+					break;
+			}
         }
-        Collections.shuffle(files);
-        db.initFiles(files);
+        db.initFiles(files, false);
+		
+		if (!megaFolders.isEmpty())
+        {
+			new MegaImages(context).getFilesList(runner, megaFolders);
+        }
+		else
+		{
+			runner.drawAction();
+		}
     }
 
-    public void next()
+    public void next(Runner runner)
     {
         if (db.hasNext())
         {
             db.next();
+			runner.drawAction();
         }
         else
         {
-            init();
+            init(runner);
         }
     }
 
-    public void previous()
+    public void previous(Runner runner)
     {
         if (db.hasPrevious())
         {
             db.previous();
+			runner.drawAction();
         }
     }
 
-    public String getCurrent()
+    public void initCurrent(Maker maker)
     {
-        return db.getCurrentPath();
+        String current = db.getCurrentPath();
+		if (TextUtils.isEmpty(current))
+		{
+			return;
+		}
+		if (current.startsWith(Constants.MEGA_PREFIX))
+		{
+			new MegaImages(context).getFile(maker, current);
+		}
+		else
+		{
+			maker.make(current);
+		}
     }
 
-    public File getCurrentFile()
+    public void deleteCurrent(final Runner runner)
     {
-        String current = getCurrent();
-        if (FileHelper.exist(current))
-        {
-            return new File(current);
-        }
-        return null;
+		String current = db.getCurrentPath();
+		if (TextUtils.isEmpty(current))
+		{
+			return;
+		}
+		Maker maker = new Maker()
+		{
+			public void make(String fileName)
+			{
+				deleteCurrent(runner, fileName);
+			}
+		};
+		if (current.startsWith(Constants.MEGA_PREFIX))
+		{
+			new MegaImages(context).removeFile(maker, current);
+		}
+		else
+		{
+			maker.make(current);
+		}
     }
-
-    public void deleteCurrent()
-    {
-        File file = getCurrentFile();
+	
+	private void deleteCurrent(Runner runner, String fileName)
+	{
+		db.deleteCurrent();
+		File file = FileHelper.getFile(fileName);
         if (file != null)
         {
-            db.deleteCurrent();
             file.delete();
-            next();
         }
-    }
+		next(runner);
+	}
 
-    public void open()
+	public void open()
+	{
+		initCurrent(
+			new Maker()
+			{
+				public void make(String fileName)
+				{
+					open(fileName);
+				}
+			}
+		);
+	}
+	
+    private void open(String fileName)
     {
-        File file = getCurrentFile();
+        File file = FileHelper.getFile(fileName);
         if (file != null)
         {
             Intent open = new Intent();

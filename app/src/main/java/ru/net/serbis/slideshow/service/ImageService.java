@@ -70,24 +70,15 @@ public class ImageService extends WallpaperService
         {
             if (visible)
             {
-                SurfaceHolder holder = getSurfaceHolder();
-                Canvas canvas = null;
-                try
-                {
-                    canvas = holder.lockCanvas();
-                    new Drawer().drawImage(canvas, runner.images.getCurrent());
-                }
-                catch (Throwable e)
-                {
-                    Log.info(this, "error on draw", e);
-                }
-                finally
-                {
-                    if (canvas != null)
-                    {
-                        holder.unlockCanvasAndPost(canvas);
-                    }
-                }
+				runner.images.initCurrent(
+					new Maker()
+					{
+						public void make(String fileName)
+						{
+							runner.drawCurrent(SlideShowEngine.this, fileName);
+						}
+					}
+				);
             }
         }
 
@@ -107,10 +98,32 @@ public class ImageService extends WallpaperService
         }
 
         @Override
-        protected void drawAction()
+        public void drawAction()
         {
             draw();
         }
+		
+		public void drawCurrent(SlideShowEngine engine, String fileName)
+		{
+			SurfaceHolder holder = engine.getSurfaceHolder();
+			Canvas canvas = null;
+			try
+			{
+				canvas = holder.lockCanvas();
+				new Drawer().drawImage(canvas, fileName);
+			}
+			catch (Throwable e)
+			{
+				Log.info(this, "error on draw", e);
+			}
+			finally
+			{
+				if (canvas != null)
+				{
+					holder.unlockCanvasAndPost(canvas);
+				}
+			}
+		}
     }
 
     public static ImageService getInstance()
