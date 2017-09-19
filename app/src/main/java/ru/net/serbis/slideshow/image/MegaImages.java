@@ -85,6 +85,7 @@ public class MegaImages
 		finally
 		{
 			Utils.close(reader);
+            new File(fileList).delete();
 		}
 		return files;
 	}
@@ -126,7 +127,7 @@ public class MegaImages
 				public void handleMessage(Message msg)
 				{
 					if (msg.getData().containsKey(Constants.MEGA_RESULT) &&
-						Constants.MEGA_SUCCESS.equals(msg.getData().getString(Constants.MEGA_FILE)))
+						Constants.MEGA_SUCCESS.equals(msg.getData().getString(Constants.MEGA_RESULT)))
 					{
 						maker.make(fileName);
 					}
