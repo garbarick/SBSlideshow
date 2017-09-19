@@ -65,13 +65,13 @@ public class Settings extends Activity
         if (view.getId() == R.id.list)
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			Folder folder = adapter.getItem(info.position);
+			Item folder = adapter.getItem(info.position);
 
 			menu.setHeaderTitle(folder.getPath());
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.folder, menu);
 
-			menu.findItem(R.id.exclude_folder).setEnabled(!FolderType.Default.equals(folder.getType()));
+			menu.findItem(R.id.exclude_folder).setEnabled(!FileType.Default.equals(folder.getType()));
         }
     }
 
@@ -96,7 +96,7 @@ public class Settings extends Activity
 		return super.onContextItemSelected(item);
     }
 
-	public boolean onItemMenuSelected(int id, Folder folder)
+	public boolean onItemMenuSelected(int id, Item folder)
     {
 		switch (id)
 		{
@@ -122,7 +122,7 @@ public class Settings extends Activity
 		{
 			public void onChoose(String path)
 			{
-				db.addFolder(new Folder(path, FolderType.System));
+				db.addFolder(new Item(path, FileType.System));
 				initList();
 			}
 		};
@@ -147,7 +147,7 @@ public class Settings extends Activity
 				case  Constants.CHOOSE_MEGA_FOLDER:
 					{
 						String path = data.getStringExtra(Constants.MEGA_SELECT_PATH);
-						db.addFolder(new Folder(path, FolderType.Mega));
+						db.addFolder(new Item(path, FileType.Mega));
 						initList();
 					}
 					break;

@@ -30,9 +30,9 @@
 	<string name="action_refresh">Refresh</string>
 	<string name="action_delete">Delete</string>
 	
-	<string name="folder_type_system">system</string>
-	<string name="folder_type_mega">mega</string>
-	<string name="folder_type_default">default</string>
+	<string name="file_type_system">system</string>
+	<string name="file_type_mega">mega</string>
+	<string name="file_type_default">default</string>
 	
 	<string name="wall_folders">Wallpaper Folders</string>
 	<string name="add_system_folder">Add System Folder</string>

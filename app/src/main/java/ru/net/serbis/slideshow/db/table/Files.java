@@ -2,7 +2,10 @@ package ru.net.serbis.slideshow.db.table;
 
 import android.database.*;
 import android.database.sqlite.*;
+import android.text.*;
 import java.util.*;
+import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
 
 public class Files extends Table
@@ -11,7 +14,7 @@ public class Files extends Table
 	{
 		super(helper);
 	}
-	
+
 	@Override
 	public void init(SQLiteDatabase db)
 	{
@@ -24,18 +27,18 @@ public class Files extends Table
 			createCutrentTable(db);
 		}
 	}
-	
+
 	private void createTables(SQLiteDatabase db)
     {
 		createFilesTable(db);
 		createCutrentTable(db);
     }
-	
+
 	private void createFilesTable(SQLiteDatabase db)
     {
         db.execSQL("create table files(id integer primary key autoincrement, path text)");
     }
-	
+
 	private void createCutrentTable(SQLiteDatabase db)
     {
         db.execSQL("create table current(path_id integer)");
@@ -46,7 +49,7 @@ public class Files extends Table
         db.execSQL("drop table files");
         db.execSQL("drop table current");
     }
-	
+
 	public void initFiles(final List<String> files, boolean add)
     {
 		if (add)
@@ -69,7 +72,7 @@ public class Files extends Table
 			"insert into current(path_id)" +
 			" select min(id) from files");
     }
-	
+
 	private List<String> getFiles()
 	{
 		return execute(
@@ -92,7 +95,7 @@ public class Files extends Table
 			}
 		);
 	}
-	
+
 	private void initFiles(SQLiteDatabase db, List<String> files)
     {
 		dropTables(db);
@@ -123,7 +126,7 @@ public class Files extends Table
 			"       current" +
 			" where id > path_id limit 1");
     }
-	
+
     public void next()
     {
 		executeUpdate(
@@ -147,13 +150,17 @@ public class Files extends Table
 			"   set path_id = (select max(id) from files where id < path_id)");
     }
 
-    public String getCurrentPath()
+    public Item getCurrentItem()
     {
-		return selectValue(
+		String current = selectValue(
 			"select path" +
 			"  from files," +
 			"       current" +
 			" where id = path_id");
+		FileType type = !TextUtils.isEmpty(current) &&
+			current.startsWith(Constants.MEGA_PREFIX) ?
+			FileType.Mega : FileType.System;
+		return new Item(current, type);
     }
 
     public void deleteCurrent()

@@ -5,6 +5,7 @@ import android.content.*;
 import android.graphics.*;
 import java.io.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.image.*;
 
 public class StaticRunner extends Runner
 {

@@ -2,15 +2,15 @@ package ru.net.serbis.slideshow.data;
 
 import ru.net.serbis.slideshow.*;
 
-public enum FolderType
+public enum FileType
 {
-	System(R.string.folder_type_system),
-	Mega(R.string.folder_type_mega),
-	Default(R.string.folder_type_default);
+	System(R.string.file_type_system),
+	Mega(R.string.file_type_mega),
+	Default(R.string.file_type_default);
 
 	private int text;
 	
-	public FolderType(int text)
+	public FileType(int text)
 	{
 		this.text = text;
 	}

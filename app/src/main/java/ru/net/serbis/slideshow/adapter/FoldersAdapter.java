@@ -6,7 +6,7 @@ import android.widget.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 
-public class FoldersAdapter extends ArrayAdapter<Folder>
+public class FoldersAdapter extends ArrayAdapter<Item>
 {
 	private static int layoutId = R.layout.folder;
 	
@@ -39,7 +39,7 @@ public class FoldersAdapter extends ArrayAdapter<Folder>
 			holder = (Holder) view.getTag();
 		}
 
-		Folder folder = getItem(position);
+		Item folder = getItem(position);
 		holder.path.setText(folder.getPath());
 		holder.type.setText(folder.getType().getText());
 		

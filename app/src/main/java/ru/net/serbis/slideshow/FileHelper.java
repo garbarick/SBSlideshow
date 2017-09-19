@@ -21,7 +21,7 @@ public class FileHelper
         return ext;
     }
 
-    public static void initWallpapers(Folder folder, List<String> fileNames)
+    public static void initWallpapers(Item folder, List<String> fileNames)
     {
 		initFileNames(new File(folder.getPath()), fileNames);
     }

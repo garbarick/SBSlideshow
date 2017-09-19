@@ -74,9 +74,9 @@ public class DBHelper extends SQLiteOpenHelper
 		files.previous();
     }
 
-    public String getCurrentPath()
+    public Item getCurrentItem()
     {
-		return files.getCurrentPath();
+		return files.getCurrentItem();
     }
 
     public void deleteCurrent()
@@ -84,17 +84,17 @@ public class DBHelper extends SQLiteOpenHelper
 		files.deleteCurrent();
     }
 	
-	public List<Folder> getFolders()
+	public List<Item> getFolders()
 	{
-		List<Folder> result = new ArrayList<Folder>();
+		List<Item> result = new ArrayList<Item>();
 		result.addAll(getDefault());
 		result.addAll(folders.getFolders());
 		return result;
 	}
 	
-	private List<Folder> getDefault()
+	private List<Item> getDefault()
 	{
-		List<Folder> result = new ArrayList<Folder>();
+		List<Item> result = new ArrayList<Item>();
 		Set<String> dirs = new HashSet<String>();
         for (String env : Arrays.asList(
             "EXTERNAL_STORAGE",
@@ -108,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper
 				String wallpapers = getWallpapers(dir);
 				if (wallpapers != null)
 				{
-					result.add(new Folder(wallpapers, FolderType.Default));
+					result.add(new Item(wallpapers, FileType.Default));
 				}
             }
         }
@@ -133,12 +133,12 @@ public class DBHelper extends SQLiteOpenHelper
 		return null;
     }
 	
-	public void addFolder(Folder folder)
+	public void addFolder(Item folder)
 	{
 		folders.addFolder(folder);
 	}
 	
-	public void excludeFolder(Folder folder)
+	public void excludeFolder(Item folder)
 	{
 		folders.excludeFolder(folder);
 	}

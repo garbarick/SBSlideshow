@@ -1,11 +1,11 @@
 package ru.net.serbis.slideshow.data;
 
-public class Folder
+public class Item
 {
 	private String path;
-	private FolderType type;
+	private FileType type;
 
-	public Folder(String path, FolderType type)
+	public Item(String path, FileType type)
 	{
 		this.path = path;
 		this.type = type;
@@ -16,7 +16,7 @@ public class Folder
 		return path;
 	}
 
-	public FolderType getType()
+	public FileType getType()
 	{
 		return type;
 	}

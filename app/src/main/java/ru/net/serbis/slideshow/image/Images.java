@@ -27,8 +27,8 @@ public class Images
     public void init(Runner runner)
     {
         List<String> files = new ArrayList<String>();
-		List<Folder> megaFolders = new ArrayList<Folder>();
-        for (Folder folder : db.getFolders())
+		List<Item> megaFolders = new ArrayList<Item>();
+        for (Item folder : db.getFolders())
         {
 			switch(folder.getType())
 			{
@@ -76,30 +76,28 @@ public class Images
         }
     }
 
-    public void initCurrent(Maker maker)
+    public void initCurrent(Maker maker, boolean removeTemp)
     {
-        String current = db.getCurrentPath();
-		if (TextUtils.isEmpty(current))
+		Item item = db.getCurrentItem();
+		switch(item.getType())
 		{
-			return;
-		}
-		if (current.startsWith(Constants.MEGA_PREFIX))
-		{
-			new MegaImages(context).getFile(maker, current);
-		}
-		else
-		{
-			maker.make(current);
+			case Mega:
+				new MegaImages(context).getFile(maker, item.getPath(), removeTemp);
+				break;
+			
+			case System:
+				maker.make(item.getPath());
+				break;
 		}
     }
+	
+	public void initCurrent(Maker maker)
+    {
+		initCurrent(maker, true);
+	}
 
     public void deleteCurrent(final Runner runner)
     {
-		String current = db.getCurrentPath();
-		if (TextUtils.isEmpty(current))
-		{
-			return;
-		}
 		Maker maker = new Maker()
 		{
 			public void make(String fileName)
@@ -107,13 +105,16 @@ public class Images
 				deleteCurrent(runner, fileName);
 			}
 		};
-		if (current.startsWith(Constants.MEGA_PREFIX))
+		Item item = db.getCurrentItem();
+		switch(item.getType())
 		{
-			new MegaImages(context).removeFile(maker, current);
-		}
-		else
-		{
-			maker.make(current);
+			case Mega:
+				new MegaImages(context).removeFile(maker, item.getPath());
+				break;
+
+			case System:
+				maker.make(item.getPath());
+				break;
 		}
     }
 	
@@ -137,7 +138,8 @@ public class Images
 				{
 					open(fileName);
 				}
-			}
+			},
+			false
 		);
 	}
 	

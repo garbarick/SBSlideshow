@@ -22,12 +22,12 @@ public class MegaImages
 		app = (App) context.getApplicationContext();
     }
 
-	public void getFilesList(Runner runner, List<Folder> folders)
+	public void getFilesList(Runner runner, List<Item> folders)
 	{
 		getFilesList(runner, folders.iterator());
 	}
 
-	private void getFilesList(final Runner runner, final Iterator<Folder> iterator)
+	private void getFilesList(final Runner runner, final Iterator<Item> iterator)
 	{
 		if (iterator.hasNext())
 		{
@@ -89,7 +89,7 @@ public class MegaImages
 		return files;
 	}
 
-	public void getFile(final Maker maker, String fileName)
+	public void getFile(final Maker maker, String fileName, final boolean removeTemp)
 	{
 		sendServiceAction(
 			Constants.MEGA_ACTION_GET_FILE,
@@ -102,7 +102,12 @@ public class MegaImages
 				{
 					if (msg.getData().containsKey(Constants.MEGA_FILE))
 					{
-						maker.make(msg.getData().getString(Constants.MEGA_FILE));
+						String result = msg.getData().getString(Constants.MEGA_FILE);
+						maker.make(result);
+						if (removeTemp)
+						{
+							new File(result).delete();
+						}
 					}
 				}
 			}

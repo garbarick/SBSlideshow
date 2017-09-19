@@ -1,4 +1,4 @@
-package ru.net.serbis.slideshow.service;
+package ru.net.serbis.slideshow.image;
 
 public interface Maker
 {

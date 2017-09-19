@@ -27,7 +27,7 @@ public class Folders extends Table
 		db.execSQL("create table folders(path text primary key, type text)");
 	}
 
-	public void addFolder(Folder folder)
+	public void addFolder(Item folder)
 	{
 		if (!isExist(
 				"select 1 from folders where path = ?",
@@ -41,29 +41,29 @@ public class Folders extends Table
 		}
 	}
 
-	public void excludeFolder(Folder folder)
+	public void excludeFolder(Item folder)
 	{
 		executeUpdate(
 			"delete from folders where path = ?",
 			folder.getPath());
 	}
 
-	public List<Folder> getFolders()
+	public List<Item> getFolders()
 	{
 		return execute(
-			new Executer<List<Folder>>()
+			new Executer<List<Item>>()
 			{
-				public List<Folder> execute(SQLiteDatabase db)
+				public List<Item> execute(SQLiteDatabase db)
 				{
-					List<Folder> result = new ArrayList<Folder>();
+					List<Item> result = new ArrayList<Item>();
 					Cursor cursor = db.rawQuery("select path, type from folders order by path", null);
 					if (cursor.moveToFirst())
 					{
 						do
 						{
-							Folder folder = new Folder(
+							Item folder = new Item(
 								cursor.getString(0),
-								FolderType.valueOf(cursor.getString(1)));
+								FileType.valueOf(cursor.getString(1)));
 							result.add(folder);
 						}
 						while(cursor.moveToNext());
