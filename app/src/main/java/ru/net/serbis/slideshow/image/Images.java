@@ -9,6 +9,7 @@ import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
 import ru.net.serbis.slideshow.service.*;
 import android.text.*;
+import ru.net.serbis.slideshow.db.table.*;
 
 /**
  * SEBY0408
@@ -25,16 +26,17 @@ public class Images
     }
 
     public void init(Runner runner)
-    {
-        List<String> files = new ArrayList<String>();
-		List<Item> megaFolders = new ArrayList<Item>();
+    {        
+        final List<Item> systemFolders = new ArrayList<Item>();
+        List<Item> megaFolders = new ArrayList<Item>();
+        
         for (Item folder : db.getFolders())
         {
 			switch(folder.getType())
 			{
 				case Default:
 				case System:
-					FileHelper.initWallpapers(folder, files);
+                    systemFolders.add(folder);
 					break;
 					
 				case Mega:
@@ -42,7 +44,16 @@ public class Images
 					break;
 			}
         }
-        db.initFiles(files, false);
+        
+        db.initFiles(
+            new FilesFinder()
+            {
+                public void find(Files files)
+                {
+                    FileHelper.findFiles(systemFolders, files);
+                }
+            },
+            false);
 		
 		if (!megaFolders.isEmpty())
         {

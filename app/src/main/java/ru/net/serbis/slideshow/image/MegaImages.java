@@ -9,6 +9,7 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.connection.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.db.table.*;
 import ru.net.serbis.slideshow.service.*;
 
 public class MegaImages
@@ -42,28 +43,34 @@ public class MegaImages
 					{
 						if (msg.getData().containsKey(Constants.MEGA_FILES_LIST))
 						{
-							initFilesList(runner, msg.getData().getString(Constants.MEGA_FILES_LIST));
-							getFilesList(runner, iterator);
+							initFilesList(msg.getData().getString(Constants.MEGA_FILES_LIST));
 						}
+                        getFilesList(runner, iterator);
 					}
 				}
 			);
 		}
+        else
+        {
+            runner.drawAction();
+        }
 	}
 
-	private void initFilesList(Runner runner, String fileList)
+	private void initFilesList(final String fileList)
 	{
-		List<String> files = getFiles(fileList);
-		if (!files.isEmpty())
-		{
-			db.initFiles(files, true);
-			runner.drawAction();
-		}
+        db.initFiles(
+            new FilesFinder()
+            {
+                public void find(Files files)
+                {
+                    findFiles(fileList, files);
+                }
+            },
+            true);
 	}
 
-	private List<String> getFiles(String fileList)
+	private void findFiles(String fileList, Files files)
 	{
-		List<String> files = new ArrayList<String>();
 		File file = new File(fileList);
 		BufferedReader reader = null;
 		try
@@ -74,7 +81,7 @@ public class MegaImages
 			{
 				if (FileHelper.checkExt(line))
 				{
-					files.add(line);
+					files.addFile(line);
 				}
 			}
 		}
@@ -87,7 +94,6 @@ public class MegaImages
 			Utils.close(reader);
             new File(fileList).delete();
 		}
-		return files;
 	}
 
 	public void getFile(final Maker maker, String fileName, final boolean removeTemp)

@@ -3,6 +3,7 @@ package ru.net.serbis.slideshow;
 import java.io.*;
 import java.util.*;
 import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.db.table.*;
 
 public class FileHelper
 {
@@ -20,32 +21,37 @@ public class FileHelper
         }
         return ext;
     }
-
-    public static void initWallpapers(Item folder, List<String> fileNames)
+    
+    public static void findFiles(List<Item> folders, Files files)
     {
-		initFileNames(new File(folder.getPath()), fileNames);
+        for (Item folder : folders)
+        {
+		    findFiles(new File(folder.getPath()), files);
+        }
     }
 
-    private static void initFileNames(File dir, List<String> fileNames)
+    private static void findFiles(File dir, final Files files)
     {
-        File[] files = dir.listFiles();
-        if (files != null)
-        {
-            for (File file : files)
+        dir.listFiles(
+            new FileFilter()
             {
-                if (file.isDirectory())
+                public boolean accept(File file)
                 {
-                    initFileNames(file, fileNames);
-                }
-                else
-                {
-                    if (checkExt(file))
+                    if (file.isDirectory())
                     {
-                        fileNames.add(file.getAbsolutePath());
+                        findFiles(file, files);
                     }
+                    else
+                    {
+                        if (checkExt(file))
+                        {
+                            files.addFile(file.getAbsolutePath());
+                        }
+                    }
+                    return false;
                 }
             }
-        }
+        );
     }
 
     public static boolean exist(String fileName)

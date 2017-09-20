@@ -49,9 +49,9 @@ public class DBHelper extends SQLiteOpenHelper
 		onCreate(db);
 	}
     
-    public void initFiles(List<String> files, boolean add)
+    public void initFiles(FilesFinder finder, boolean add)
     {
-		this.files.initFiles(files, add);
+		this.files.initFiles(finder, add);
     }
 
     public boolean hasNext()

@@ -10,6 +10,12 @@ import ru.net.serbis.slideshow.db.*;
 
 public class Files extends Table
 {
+    private static final String FILES = "files";
+    private static final String TEMP = "temp";
+    private static final String CURRENT = "current";
+    
+    private SQLiteStatement insertFile;
+
 	public Files(DBHelper helper)
 	{
 		super(helper);
@@ -18,155 +24,146 @@ public class Files extends Table
 	@Override
 	public void init(SQLiteDatabase db)
 	{
-		if (!isTableExist(db, "files"))
+		if (!isTableExist(db, FILES))
 		{
 			createFilesTable(db);
 		}
-		if (!isTableExist(db, "current"))
+		if (!isTableExist(db, CURRENT))
 		{
-			createCutrentTable(db);
+			createCurrentTable(db);
 		}
 	}
 
-	private void createTables(SQLiteDatabase db)
-    {
-		createFilesTable(db);
-		createCutrentTable(db);
-    }
-
 	private void createFilesTable(SQLiteDatabase db)
     {
-        db.execSQL("create table files(id integer primary key autoincrement, path text)");
+        db.execSQL("create table " + FILES + "(id integer primary key autoincrement, path text)");
     }
 
-	private void createCutrentTable(SQLiteDatabase db)
+	private void createCurrentTable(SQLiteDatabase db)
     {
-        db.execSQL("create table current(path_id integer)");
+        db.execSQL("create table " + CURRENT + "(path_id integer)");
     }
 
-    private void dropTables(SQLiteDatabase db)
+    private void createTempTable(SQLiteDatabase db)
     {
-        db.execSQL("drop table files");
-        db.execSQL("drop table current");
+        db.execSQL("create table " + TEMP + "(path text)");
     }
 
-	public void initFiles(final List<String> files, boolean add)
+    private void dropTable(SQLiteDatabase db, String table)
     {
-		if (add)
-		{
-			files.addAll(getFiles());
-		}
-		Collections.shuffle(files);
+        if (isTableExist(db, table))
+        {
+            db.execSQL("drop table " + table);
+        }
+    }
+
+	public void initFiles(final FilesFinder finder, final boolean add)
+    {
 		execute(
 			new Executer<Void>()
 			{
 			    public Void execute(SQLiteDatabase db)
 				{
-					initFiles(db, files);
+					initFiles(db, finder, add);
 					return null;
 				}
 			},
 			true
 		);
-		executeUpdate(
-			"insert into current(path_id)" +
-			" select min(id) from files");
     }
 
-	private List<String> getFiles()
-	{
-		return execute(
-			new Executer<List<String>>()
-			{
-				public List<String> execute(SQLiteDatabase db)
-				{
-					List<String> result = new ArrayList<String>();
-					Cursor cursor = db.rawQuery("select path from files", null);
-					if (cursor.moveToFirst())
-					{
-						do
-						{
-							result.add(cursor.getString(0));
-						}
-						while(cursor.moveToNext());
-					}
-					return result;
-				}
-			}
-		);
-	}
-
-	private void initFiles(SQLiteDatabase db, List<String> files)
+	private void initFiles(SQLiteDatabase db, FilesFinder finder, boolean add)
     {
-		dropTables(db);
-		createTables(db);
+        dropTable(db, TEMP);
+        createTempTable(db);
+        if (add)
+        {
+            executeUpdate(
+                db,
+                "insert into " + TEMP + "(path)" +
+                " select path from " + FILES);
+        }
 
-		if (files.isEmpty())
-		{
-			return;
-		}
+        dropTable(db, CURRENT);
+        createCurrentTable(db);
+
+        dropTable(db, FILES);        
+        createFilesTable(db);
 
 		db.beginTransaction();
-		SQLiteStatement insert = db.compileStatement("insert into files(path) values(?)");
-		for (String file : files)
-		{
-			insert.clearBindings();
-			insert.bindString(1, file);
-			insert.execute();
-		}
+		insertFile = db.compileStatement("insert into " + TEMP + "(path) values(?)");
+		finder.find(this);
 		db.setTransactionSuccessful();
 		db.endTransaction();
+
+        executeUpdate(
+            db,
+            "insert into " + FILES + "(path)" +
+            " select path from " + TEMP + " order by random()");
+
+        executeUpdate(
+            db,
+            "insert into " + CURRENT + "(path_id)" +
+            " select min(id) from " + FILES);
+            
+        dropTable(db, TEMP);
 	}
+
+    public void addFile(String fileName)
+    {
+        insertFile.clearBindings();
+        insertFile.bindString(1, fileName);
+        insertFile.execute();
+    }
 
     public boolean hasNext()
     {
 		return isExist(
 			"select id" +
-			"  from files," +
-			"       current" +
+			"  from " + FILES + "," + CURRENT +
 			" where id > path_id limit 1");
     }
 
     public void next()
     {
 		executeUpdate(
-			"update current" +
-			"   set path_id = (select min(id) from files where id > path_id)");
+			"update " + CURRENT +
+			"   set path_id = (select min(id) from " + FILES + " where id > path_id)");
     }
 
     public boolean hasPrevious()
     {
 		return isExist(
 			"select id" +
-			"  from files," +
-			"       current" +
+            "  from " + FILES + "," + CURRENT +
 			" where id < path_id limit 1");
     }
 
     public void previous()
     {
 		executeUpdate(
-			"update current" +
-			"   set path_id = (select max(id) from files where id < path_id)");
+			"update " + CURRENT +
+			"   set path_id = (select max(id) from " + FILES + " where id < path_id)");
     }
 
     public Item getCurrentItem()
     {
 		String current = selectValue(
 			"select path" +
-			"  from files," +
-			"       current" +
+            "  from " + FILES + "," + CURRENT +
 			" where id = path_id");
+
 		FileType type = !TextUtils.isEmpty(current) &&
 			current.startsWith(Constants.MEGA_PREFIX) ?
 			FileType.Mega : FileType.System;
+
 		return new Item(current, type);
     }
 
     public void deleteCurrent()
     {
 		executeUpdate(
-			"delete from files" +
-			" where id in (select path_id from current)");
+			"delete from " + FILES +
+			" where id in (select path_id from " + CURRENT + ")");
     }
 }
