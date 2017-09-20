@@ -52,6 +52,7 @@ public class MegaImages
 		}
         else
         {
+            Log.info(this, "mega folders finished");
             runner.drawAction();
         }
 	}

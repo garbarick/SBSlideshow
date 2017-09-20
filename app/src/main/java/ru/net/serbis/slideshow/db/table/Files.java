@@ -74,6 +74,9 @@ public class Files extends Table
 
 	private void initFiles(SQLiteDatabase db, FilesFinder finder, boolean add)
     {
+        Log.info(this, "start initFiles");
+        db.beginTransaction();
+
         dropTable(db, TEMP);
         createTempTable(db);
         if (add)
@@ -90,11 +93,8 @@ public class Files extends Table
         dropTable(db, FILES);        
         createFilesTable(db);
 
-		db.beginTransaction();
 		insertFile = db.compileStatement("insert into " + TEMP + "(path) values(?)");
 		finder.find(this);
-		db.setTransactionSuccessful();
-		db.endTransaction();
 
         executeUpdate(
             db,
@@ -107,7 +107,11 @@ public class Files extends Table
             " select min(id) from " + FILES);
             
         dropTable(db, TEMP);
-	}
+        
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        Log.info(this, "finish initFiles");
+    }
 
     public void addFile(String fileName)
     {
@@ -152,7 +156,9 @@ public class Files extends Table
 			"select path" +
             "  from " + FILES + "," + CURRENT +
 			" where id = path_id");
-
+        
+        Log.info(this, "current=" + current);
+        
 		FileType type = !TextUtils.isEmpty(current) &&
 			current.startsWith(Constants.MEGA_PREFIX) ?
 			FileType.Mega : FileType.System;

@@ -115,12 +115,12 @@ public class DBHelper extends SQLiteOpenHelper
 		return result;
 	}
 	
-	public String getWallpapers(String storage)
+	private String getWallpapers(String storage)
     {
         return getWallpapers(new File(storage));
     }
 
-    public String getWallpapers(File storage)
+    private String getWallpapers(File storage)
     {
         if (storage.exists() && storage.isDirectory() && storage.canRead())
         {
