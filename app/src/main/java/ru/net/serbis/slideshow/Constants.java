@@ -44,6 +44,7 @@ public interface Constants
 	String MEGA_FILES_LIST = MEGA_PACKAGE + ".FILES_LIST";
 	String MEGA_FILE = MEGA_PACKAGE + ".FILE";
 	String MEGA_RESULT = MEGA_PACKAGE + ".RESULT";
+	String MEGA_ERROR_CODE = MEGA_PACKAGE + ".ERROR_CODE";
 	
 	int MEGA_ACTION_SELECT_ACCOUNT_PATH = 102;
 	int MEGA_ACTION_GET_FILES_LIST = 103;
@@ -52,4 +53,6 @@ public interface Constants
 	
 	String MEGA_PREFIX = "//sbmega/";
 	String MEGA_SUCCESS = "SUCCESS";
+	
+	int MEGA_ERROR_FILE_NOT_FOUND = 401;
 }

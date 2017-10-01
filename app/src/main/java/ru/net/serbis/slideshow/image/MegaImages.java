@@ -138,6 +138,11 @@ public class MegaImages
 					{
 						maker.make(fileName);
 					}
+					else if (msg.getData().containsKey(Constants.MEGA_ERROR_CODE) &&
+						Constants.MEGA_ERROR_FILE_NOT_FOUND == msg.getData().getInt(Constants.MEGA_ERROR_CODE))
+					{
+						maker.make(fileName);
+					}
 				}
 			}
 		);
