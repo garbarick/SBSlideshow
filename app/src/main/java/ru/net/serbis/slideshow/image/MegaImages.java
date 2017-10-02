@@ -97,7 +97,7 @@ public class MegaImages
 		}
 	}
 
-	public void getFile(final Maker maker, String fileName, final boolean removeTemp)
+	public void getFile(final Maker maker, final String fileName, final boolean removeTemp)
 	{
 		sendServiceAction(
 			Constants.MEGA_ACTION_GET_FILE,
@@ -116,6 +116,11 @@ public class MegaImages
 						{
 							new File(result).delete();
 						}
+					}
+					else if (msg.getData().containsKey(Constants.MEGA_ERROR_CODE) &&
+							 Constants.MEGA_ERROR_FILE_NOT_FOUND == msg.getData().getInt(Constants.MEGA_ERROR_CODE))
+					{
+						maker.make(fileName);
 					}
 				}
 			}
