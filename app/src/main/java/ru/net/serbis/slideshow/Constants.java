@@ -55,4 +55,6 @@ public interface Constants
 	String MEGA_SUCCESS = "SUCCESS";
 	
 	int MEGA_ERROR_FILE_NOT_FOUND = 401;
+	
+	String ORIENTATION = "orientation";
 }

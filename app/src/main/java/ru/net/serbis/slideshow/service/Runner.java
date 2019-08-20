@@ -3,17 +3,20 @@ package ru.net.serbis.slideshow.service;
 import android.content.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.image.*;
+import ru.net.serbis.slideshow.db.*;
 
 public class Runner
 {
     private boolean progress;
     protected Images images;
+	protected Drawer drawer;
     protected Context context;
     
     public Runner(Context context)
     {
         images = new Images(context);
         this.context = context;
+		drawer = new Drawer(new DBHelper(context).parameters());
     }
     
     public void runAction(Action action)

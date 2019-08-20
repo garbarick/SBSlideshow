@@ -36,7 +36,7 @@ public class StaticRunner extends Runner
             File file = FileHelper.getFile(fileName);
             if (file != null)
             {
-                Bitmap bitmap = load(file);
+                Bitmap bitmap = drawer.load(file);
                 manager.setBitmap(bitmap);
             }
             else
@@ -48,16 +48,5 @@ public class StaticRunner extends Runner
         {
             Log.info(this, "error on set wallpaper", e);
         }
-    }
-    
-    private Bitmap load(File source)
-    {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        options.inDither = false;
-        options.inPurgeable = true;
-        options.inInputShareable = true;
-
-        return BitmapFactory.decodeFile(source.getAbsolutePath(), options);
     }
 }

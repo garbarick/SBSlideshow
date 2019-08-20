@@ -2,11 +2,9 @@ package ru.net.serbis.slideshow.activity;
 
 import android.app.*;
 import android.content.*;
-import android.net.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
-import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
@@ -15,8 +13,9 @@ import ru.net.serbis.slideshow.db.*;
 public class Settings extends Activity
 {
 	private App app;
-	private ListView list;
-	private FoldersAdapter adapter;
+	private ListView wallFolders;
+	private FoldersAdapter folderAdapter;
+	private Spinner orientation;
 	private DBHelper db;
 
 	@Override
@@ -27,21 +26,52 @@ public class Settings extends Activity
 
 		app = (App) getApplication();
 		db = new DBHelper(this);
-		list = (ListView) findViewById(R.id.list);
-		adapter = new FoldersAdapter(this);
-		list.setAdapter(adapter);
-		initList();
-
-		registerForContextMenu(list);
+		
+		initOrientation();
+		initWallFolders();
+		
+		registerForContextMenu(wallFolders);
 	}
 
-	private void initList()
+	private void initOrientation()
 	{
-		adapter.setNotifyOnChange(false);
-		adapter.clear();
-		adapter.addAll(db.getFolders());
-		adapter.setNotifyOnChange(true);
-		adapter.notifyDataSetChanged();
+		orientation = (Spinner) findViewById(R.id.orientation);
+		final OrientationAdapter adapter = new OrientationAdapter(this);
+		orientation.setAdapter(adapter);
+		int current = db.parameters().getOrientation();
+		orientation.setSelection(adapter.getPosition(current));
+		orientation.setOnItemSelectedListener(
+			new AdapterView.OnItemSelectedListener()
+			{
+				@Override
+				public void onItemSelected(AdapterView parent, View view, int position, long id)
+				{
+					db.parameters().setOrientation(adapter.getItem(position));
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView parent)
+				{
+				}
+			}
+		);
+	}
+	
+	private void initWallFolders()
+	{
+		wallFolders = (ListView) findViewById(R.id.wall_folders);
+		folderAdapter = new FoldersAdapter(this);
+		wallFolders.setAdapter(folderAdapter);
+		initFolderAdapter();
+	}
+	
+	private void initFolderAdapter()
+	{
+		folderAdapter.setNotifyOnChange(false);
+		folderAdapter.clear();
+		folderAdapter.addAll(db.getFolders());
+		folderAdapter.setNotifyOnChange(true);
+		folderAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -62,10 +92,10 @@ public class Settings extends Activity
 	@Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo)
     {
-        if (view.getId() == R.id.list)
+        if (view.getId() == R.id.wall_folders)
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			Item folder = adapter.getItem(info.position);
+			Item folder = folderAdapter.getItem(info.position);
 
 			menu.setHeaderTitle(folder.getPath());
             MenuInflater inflater = getMenuInflater();
@@ -89,7 +119,7 @@ public class Settings extends Activity
     public boolean onContextItemSelected(MenuItem item)
     {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-		if (onItemMenuSelected(item.getItemId(), adapter.getItem(info.position)))
+		if (onItemMenuSelected(item.getItemId(), folderAdapter.getItem(info.position)))
         {
             return true;
 		}
@@ -110,7 +140,7 @@ public class Settings extends Activity
 
 			case R.id.exclude_folder:
 				db.excludeFolder(folder);
-				initList();
+				initFolderAdapter();
 				return true;
 		}
         return false;
@@ -123,7 +153,7 @@ public class Settings extends Activity
 			public void onChoose(String path)
 			{
 				db.addFolder(new Item(path, FileType.System));
-				initList();
+				initFolderAdapter();
 			}
 		};
 	}
@@ -148,7 +178,7 @@ public class Settings extends Activity
 					{
 						String path = data.getStringExtra(Constants.MEGA_SELECT_PATH);
 						db.addFolder(new Item(path, FileType.Mega));
-						initList();
+						initFolderAdapter();
 					}
 					break;
             }

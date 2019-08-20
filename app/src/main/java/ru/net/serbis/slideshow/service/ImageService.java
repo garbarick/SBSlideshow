@@ -110,7 +110,7 @@ public class ImageService extends WallpaperService
 			try
 			{
 				canvas = holder.lockCanvas();
-				new Drawer().drawImage(canvas, fileName);
+				drawer.drawImage(canvas, fileName);
 			}
 			catch (Throwable e)
 			{

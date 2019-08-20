@@ -15,16 +15,17 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	private Files files = new Files(this);
 	private Folders folders = new Folders(this);
+	private Parameters parameters = new Parameters(this);
 	
     public DBHelper(Context context)
     {
-        super(context, "db", null, 2);
+        super(context, "db", null, 3);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-		for (Table table : Arrays.asList(files, folders))
+		for (Table table : Arrays.asList(files, folders, parameters))
 		{
 			try
 			{
@@ -141,5 +142,10 @@ public class DBHelper extends SQLiteOpenHelper
 	public void excludeFolder(Item folder)
 	{
 		folders.excludeFolder(folder);
+	}
+	
+	public Parameters parameters()
+	{
+		return parameters;
 	}
 }
