@@ -31,7 +31,7 @@ public class App extends Application
 			{
 				Intent intent = new Intent();
 				intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
-				bindService(intent, connection, Context.BIND_AUTO_CREATE);
+				bindService(intent, connection, Context.BIND_AUTO_CREATE | Context.BIND_ADJUST_WITH_ACTIVITY);
 			}
 		}
 		catch (Throwable e)
