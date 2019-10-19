@@ -73,11 +73,11 @@ public class Drawer
 
     private Matrix getMatrix(Bitmap image, Canvas canvas)
 	{
-        android.util.Size size = new android.util.Size(canvas.getWidth(), canvas.getHeight());
+        Point size = new Point(canvas.getWidth(), canvas.getHeight());
         return getMatrix(image, size);
     }
     
-	private Matrix getMatrix(Bitmap image, android.util.Size size)
+	private Matrix getMatrix(Bitmap image, Point size)
 	{
         //Log.info(this, "size=" + size);
 		int orientation = parameters.getIntValue(Constants.ORIENTATION);
@@ -97,36 +97,36 @@ public class Drawer
 		{
 			matrix.postRotate(-90);
 		}
-		matrix.postTranslate(size.getWidth() / 2, size.getHeight() / 2);
+		matrix.postTranslate(size.x / 2, size.y / 2);
 		return matrix;
 	}
 
-	private float getScale(boolean rotate, android.util.Size size, Bitmap image)
+	private float getScale(boolean rotate, Point size, Bitmap image)
 	{
 		if (rotate)
 		{
 			return Math.max(
-				(float) size.getWidth() / image.getHeight(),
-				(float) size.getHeight() / image.getWidth());
+				(float) size.x / image.getHeight(),
+				(float) size.y / image.getWidth());
 		}
 		else
 		{
 			return Math.max(
-				(float) size.getWidth() / image.getWidth(),
-				(float) size.getHeight() / image.getHeight());
+				(float) size.x / image.getWidth(),
+				(float) size.y / image.getHeight());
 		}
 	}
 
-	private int getOrientation(android.util.Size size)
+	private int getOrientation(Point size)
 	{
-		if (size.getWidth() > size.getHeight())
+		if (size.x > size.y)
 		{
 			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 		}
 		return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 	}
     
-    public Bitmap getScaled(Bitmap image, android.util.Size size)
+    public Bitmap getScaled(Bitmap image, Point size)
     {
         Matrix matrix = getMatrix(image, size);
         Bitmap result = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);

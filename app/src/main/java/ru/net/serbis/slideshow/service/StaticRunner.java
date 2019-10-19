@@ -52,12 +52,12 @@ public class StaticRunner extends Runner
         }
     }
 
-    private android.util.Size getDisplaySize()
+    private Point getDisplaySize()
     {
         android.util.DisplayMetrics metrics = new android.util.DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         display.getMetrics(metrics);
-        return new android.util.Size(metrics.widthPixels, metrics.heightPixels);
+        return new Point(metrics.widthPixels, metrics.heightPixels);
     }
 }
