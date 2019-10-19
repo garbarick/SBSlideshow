@@ -1,29 +1,22 @@
 package ru.net.serbis.slideshow.adapter;
 
 import android.content.*;
-import android.content.pm.*;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
 
-public class OrientationAdapter extends ArrayAdapter<Integer>
+public class SpinnerAdapter extends ArrayAdapter<Integer>
 {
 	private static int layoutId = R.layout.value;
 
-	private static Map<Integer, Integer> DATA = new LinkedHashMap<Integer, Integer>()
-	{
-		{
-			put(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.bydefault);
-			put(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, R.string.portrait);
-			put(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, R.string.landscape);
-		}
-	};
+	private Map<Integer, Integer> data;
 	
-	public OrientationAdapter(Context context)
+	public SpinnerAdapter(Context context, Map<Integer, Integer> data)
 	{
 		super(context, layoutId);
-		addAll(DATA.keySet());
+        this.data = data;
+		addAll(data.keySet());
 	}
 
 	@Override
@@ -36,7 +29,7 @@ public class OrientationAdapter extends ArrayAdapter<Integer>
 		
 		Integer value = getItem(position);
 		TextView text = (TextView)view.findViewById(R.id.value);
-		text.setText(DATA.get(value));
+		text.setText(data.get(value));
 		
 		return view;
 	}

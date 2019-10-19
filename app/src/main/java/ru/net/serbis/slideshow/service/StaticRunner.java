@@ -6,6 +6,7 @@ import android.graphics.*;
 import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.image.*;
+import android.view.*;
 
 public class StaticRunner extends Runner
 {
@@ -37,6 +38,7 @@ public class StaticRunner extends Runner
             if (file != null)
             {
                 Bitmap bitmap = drawer.load(file);
+                bitmap = drawer.getScaled(bitmap, getDisplaySize());
                 manager.setBitmap(bitmap);
             }
             else
@@ -48,5 +50,14 @@ public class StaticRunner extends Runner
         {
             Log.info(this, "error on set wallpaper", e);
         }
+    }
+
+    private android.util.Size getDisplaySize()
+    {
+        android.util.DisplayMetrics metrics = new android.util.DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        display.getMetrics(metrics);
+        return new android.util.Size(metrics.widthPixels, metrics.heightPixels);
     }
 }

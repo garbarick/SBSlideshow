@@ -2,6 +2,8 @@ package ru.net.serbis.slideshow;
 
 import java.util.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.data.*;
+import android.content.pm.*;
 
 public interface Constants
 {
@@ -56,5 +58,16 @@ public interface Constants
 	
 	int MEGA_ERROR_FILE_NOT_FOUND = 401;
 	
-	String ORIENTATION = "orientation";
+	Parameter ORIENTATION = new Parameter("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    Map<Integer, Integer> ORIENTATIONS = new LinkedHashMap<Integer, Integer>()
+    {
+        {
+            put(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.bydefault);
+            put(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, R.string.portrait);
+            put(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, R.string.landscape);
+        }
+	};
+    
+    Parameter DOUBLE_CLICK_CHANGE = new Parameter("double_click_change", true);
+    Parameter SHAKE_CHANGE = new Parameter("shake_change", false);
 }

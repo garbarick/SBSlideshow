@@ -8,6 +8,7 @@ import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.image.*;
+import ru.net.serbis.slideshow.listener.*;
 
 public class ImageService extends WallpaperService
 {
@@ -20,6 +21,8 @@ public class ImageService extends WallpaperService
     {
         private GestureDetector doubleTapDetector;
         private boolean visible = true;
+        private ShakeListener shakeListener;
+        private boolean doubleClickChange;
 
         @Override
         public void onCreate(SurfaceHolder surfaceHolder)
@@ -35,13 +38,40 @@ public class ImageService extends WallpaperService
                 }
             });
             setTouchEventsEnabled(true);
+            switchDoubleClickListener();
+            
+            shakeListener = new ShakeListener(ImageService.this, new ShakeListener.OnShakeListener()
+            {
+                @Override
+                public void onShake()
+                {
+                    runner.runAction(Action.Next);
+                }
+            });
+            switchShakeListener();
+            
             engines.add(this);
+        }
+        
+        public void switchDoubleClickListener()
+        {
+            doubleClickChange = runner.isParameter(Constants.DOUBLE_CLICK_CHANGE);
+        }
+        
+        public void switchShakeListener()
+        {
+            shakeListener.stop();
+            if (runner.isParameter(Constants.SHAKE_CHANGE))
+            {
+                shakeListener.start();
+            }
         }
 
         @Override
         public void onDestroy()
         {
             engines.remove(this);
+            shakeListener.stop();
             super.onDestroy();
         }
 
@@ -86,7 +116,10 @@ public class ImageService extends WallpaperService
         public void onTouchEvent(MotionEvent event)
         {
             super.onTouchEvent(event);
-            doubleTapDetector.onTouchEvent(event);
+            if (doubleClickChange)
+            {
+                doubleTapDetector.onTouchEvent(event);
+            }
         }
     }
     
@@ -124,6 +157,11 @@ public class ImageService extends WallpaperService
 				}
 			}
 		}
+        
+        public boolean isParameter(Parameter param)
+        {
+            return parameters.getBoolValue(param);
+        }
     }
 
     public static ImageService getInstance()
@@ -169,5 +207,21 @@ public class ImageService extends WallpaperService
     public Runner getRunner()
     {
         return runner;
+    }
+    
+    public void switchDoubleClickListener()
+    {
+        for (SlideShowEngine engine : engines)
+        {
+            engine.switchDoubleClickListener();
+        }
+    }
+    
+    public void switchShakeListener()
+    {
+        for (SlideShowEngine engine : engines)
+        {
+            engine.switchShakeListener();
+        }
     }
 }

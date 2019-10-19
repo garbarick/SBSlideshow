@@ -4,11 +4,13 @@ import android.content.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.image.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.db.table.*;
 
 public class Runner
 {
     private boolean progress;
     protected Images images;
+    protected Parameters parameters;
 	protected Drawer drawer;
     protected Context context;
     
@@ -16,7 +18,8 @@ public class Runner
     {
         images = new Images(context);
         this.context = context;
-		drawer = new Drawer(new DBHelper(context).parameters());
+        parameters = new DBHelper(context).parameters();
+		drawer = new Drawer(parameters);
     }
     
     public void runAction(Action action)

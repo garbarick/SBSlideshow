@@ -71,17 +71,24 @@ public class Drawer
 		matrix.reset();
     }
 
-	private Matrix getMatrix(Bitmap image, Canvas canvas)
+    private Matrix getMatrix(Bitmap image, Canvas canvas)
 	{
-		int orientation = parameters.getOrientation();
+        android.util.Size size = new android.util.Size(canvas.getWidth(), canvas.getHeight());
+        return getMatrix(image, size);
+    }
+    
+	private Matrix getMatrix(Bitmap image, android.util.Size size)
+	{
+        //Log.info(this, "size=" + size);
+		int orientation = parameters.getIntValue(Constants.ORIENTATION);
 		boolean rotate = false;
 		if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED &&
-		    orientation != getOrientation(canvas))
+		    orientation != getOrientation(size))
 		{
 			rotate = true;
 		}
 
-		float scale = getScale(rotate, canvas, image);
+		float scale = getScale(rotate, size, image);
 		Matrix matrix = new Matrix();
 
 		matrix.postTranslate(-image.getWidth() / 2, -image.getHeight() / 2);
@@ -90,32 +97,40 @@ public class Drawer
 		{
 			matrix.postRotate(-90);
 		}
-		matrix.postTranslate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+		matrix.postTranslate(size.getWidth() / 2, size.getHeight() / 2);
 		return matrix;
 	}
 
-	private float getScale(boolean rotate, Canvas canvas, Bitmap image)
+	private float getScale(boolean rotate, android.util.Size size, Bitmap image)
 	{
 		if (rotate)
 		{
 			return Math.max(
-				(float) canvas.getWidth() / image.getHeight(),
-				(float) canvas.getHeight() / image.getWidth());
+				(float) size.getWidth() / image.getHeight(),
+				(float) size.getHeight() / image.getWidth());
 		}
 		else
 		{
 			return Math.max(
-				(float) canvas.getWidth() / image.getWidth(),
-				(float) canvas.getHeight() / image.getHeight());
+				(float) size.getWidth() / image.getWidth(),
+				(float) size.getHeight() / image.getHeight());
 		}
 	}
 
-	private int getOrientation(Canvas canvas)
+	private int getOrientation(android.util.Size size)
 	{
-		if (canvas.getWidth() > canvas.getHeight())
+		if (size.getWidth() > size.getHeight())
 		{
 			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 		}
 		return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 	}
+    
+    public Bitmap getScaled(Bitmap image, android.util.Size size)
+    {
+        Matrix matrix = getMatrix(image, size);
+        Bitmap result = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
+        image.recycle();
+        return result;
+    }
 }

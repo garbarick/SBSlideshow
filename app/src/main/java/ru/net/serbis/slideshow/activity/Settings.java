@@ -15,7 +15,6 @@ public class Settings extends Activity
 	private App app;
 	private ListView wallFolders;
 	private FoldersAdapter folderAdapter;
-	private Spinner orientation;
 	private DBHelper db;
 
 	@Override
@@ -27,39 +26,26 @@ public class Settings extends Activity
 		app = (App) getApplication();
 		db = new DBHelper(this);
 		
-		initOrientation();
-		initWallFolders();
+		initParameters();
+        initWallFolders();
 		
 		registerForContextMenu(wallFolders);
 	}
-
-	private void initOrientation()
-	{
-		orientation = (Spinner) findViewById(R.id.orientation);
-		final OrientationAdapter adapter = new OrientationAdapter(this);
-		orientation.setAdapter(adapter);
-		int current = db.parameters().getOrientation();
-		orientation.setSelection(adapter.getPosition(current));
-		orientation.setOnItemSelectedListener(
-			new AdapterView.OnItemSelectedListener()
-			{
-				@Override
-				public void onItemSelected(AdapterView parent, View view, int position, long id)
-				{
-					db.parameters().setOrientation(adapter.getItem(position));
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView parent)
-				{
-				}
-			}
-		);
-	}
-	
+    
+    private <T> T findView(int id)
+    {
+        return (T) findViewById(id);
+    }
+    
+    private void initParameters()
+    {
+        ListView parameters = findView(R.id.parameters);
+        parameters.setAdapter(new ParametersAdapter(this));
+    }
+    
 	private void initWallFolders()
 	{
-		wallFolders = (ListView) findViewById(R.id.wall_folders);
+		wallFolders = findView(R.id.wall_folders);
 		folderAdapter = new FoldersAdapter(this);
 		wallFolders.setAdapter(folderAdapter);
 		initFolderAdapter();
