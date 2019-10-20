@@ -79,7 +79,6 @@ public class Drawer
     
 	private Matrix getMatrix(Bitmap image, Point size)
 	{
-        //Log.info(this, "size=" + size);
 		int orientation = parameters.getIntValue(Constants.ORIENTATION);
 		boolean rotate = false;
 		if (orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED &&
@@ -132,5 +131,23 @@ public class Drawer
         Bitmap result = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
         image.recycle();
         return result;
+    }
+    
+    public void saveImage(Bitmap image, File file)
+    {
+        OutputStream out = null;
+        try
+        {
+            out = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.JPEG, 85, out);
+        }
+        catch(Exception e)
+        {
+            Log.info(this, "error on saveImage", e);
+        }
+        finally
+        {
+            Utils.close(out);
+        }
     }
 }

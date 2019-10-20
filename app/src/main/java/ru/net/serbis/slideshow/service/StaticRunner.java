@@ -37,9 +37,7 @@ public class StaticRunner extends Runner
             File file = FileHelper.getFile(fileName);
             if (file != null)
             {
-                Bitmap bitmap = drawer.load(file);
-                bitmap = drawer.getScaled(bitmap, getDisplaySize());
-                manager.setBitmap(bitmap);
+                setImage(file, manager);
             }
             else
             {
@@ -49,6 +47,33 @@ public class StaticRunner extends Runner
         catch (Throwable e)
         {
             Log.info(this, "error on set wallpaper", e);
+        }
+    }
+
+    private void setImage(File file, WallpaperManager manager) throws IOException
+    {
+        Bitmap image = null;
+        try
+        {
+            image = drawer.load(file);
+            if (image != null)
+            {
+                Point size = getDisplaySize();
+                image = drawer.getScaled(image, size);
+                manager.suggestDesiredDimensions(size.x, size.y);
+                manager.setBitmap(image);
+            }
+        }
+        catch (Throwable e)
+        {
+            Log.info(this, "error on drawImage", e);
+        }
+        finally
+        {
+            if (image != null)
+            {
+                image.recycle();
+            }
         }
     }
 
