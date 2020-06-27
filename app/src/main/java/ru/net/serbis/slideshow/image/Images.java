@@ -4,16 +4,12 @@ import android.content.*;
 import android.net.*;
 import java.io.*;
 import java.util.*;
-import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
-import ru.net.serbis.slideshow.service.*;
-import android.text.*;
 import ru.net.serbis.slideshow.db.table.*;
+import ru.net.serbis.slideshow.service.*;
+import ru.net.serbis.slideshow.tools.*;
 
-/**
- * SEBY0408
- */
 public class Images
 {
     private DBHelper db;
@@ -45,7 +41,7 @@ public class Images
 			}
         }
         
-        db.initFiles(
+        db.files.initFiles(
             new FilesFinder()
             {
                 public void find(Files files)
@@ -67,9 +63,9 @@ public class Images
 
     public void next(Runner runner)
     {
-        if (db.hasNext())
+        if (db.files.hasNext())
         {
-            db.next();
+            db.files.next();
 			runner.drawAction();
         }
         else
@@ -80,16 +76,16 @@ public class Images
 
     public void previous(Runner runner)
     {
-        if (db.hasPrevious())
+        if (db.files.hasPrevious())
         {
-            db.previous();
+            db.files.previous();
 			runner.drawAction();
         }
     }
 
     public void initCurrent(Maker maker, boolean removeTemp)
     {
-		Item item = db.getCurrentItem();
+		Item item = db.files.getCurrentItem();
 		switch(item.getType())
 		{
 			case Mega:
@@ -116,7 +112,7 @@ public class Images
 				deleteCurrent(runner, fileName);
 			}
 		};
-		Item item = db.getCurrentItem();
+		Item item = db.files.getCurrentItem();
 		switch(item.getType())
 		{
 			case Mega:
@@ -131,7 +127,7 @@ public class Images
 	
 	private void deleteCurrent(Runner runner, String fileName)
 	{
-		db.deleteCurrent();
+		db.files.deleteCurrent();
 		File file = FileHelper.getFile(fileName);
         if (file != null)
         {

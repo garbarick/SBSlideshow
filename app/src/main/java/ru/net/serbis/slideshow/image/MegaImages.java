@@ -11,6 +11,7 @@ import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
 import ru.net.serbis.slideshow.db.table.*;
 import ru.net.serbis.slideshow.service.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class MegaImages
 {
@@ -59,7 +60,7 @@ public class MegaImages
 
 	private void initFilesList(final String fileList)
 	{
-        db.initFiles(
+        db.files.initFiles(
             new FilesFinder()
             {
                 public void find(Files files)

@@ -8,15 +8,13 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.table.*;
 
-/**
- * SEBY0408
- */
 public class DBHelper extends SQLiteOpenHelper
 {
-	private Files files = new Files(this);
-	private Folders folders = new Folders(this);
-	private Parameters parameters = new Parameters(this);
-	
+	public Files files = new Files(this);
+	public Folders folders = new Folders(this);
+	public Parameters parameters = new Parameters(this);
+	public Information information = new Information(this);
+    
     public DBHelper(Context context)
     {
         super(context, "db", null, 3);
@@ -49,42 +47,7 @@ public class DBHelper extends SQLiteOpenHelper
 	{
 		onCreate(db);
 	}
-    
-    public void initFiles(FilesFinder finder, boolean add)
-    {
-		this.files.initFiles(finder, add);
-    }
 
-    public boolean hasNext()
-    {
-		return files.hasNext();
-    }
-
-    public void next()
-    {
-		files.next();
-    }
-
-    public boolean hasPrevious()
-    {
-		return files.hasPrevious();
-    }
-
-    public void previous()
-    {
-		files.previous();
-    }
-
-    public Item getCurrentItem()
-    {
-		return files.getCurrentItem();
-    }
-
-    public void deleteCurrent()
-    {
-		files.deleteCurrent();
-    }
-	
 	public List<Item> getFolders()
 	{
 		List<Item> result = new ArrayList<Item>();
@@ -133,19 +96,4 @@ public class DBHelper extends SQLiteOpenHelper
         }
 		return null;
     }
-	
-	public void addFolder(Item folder)
-	{
-		folders.addFolder(folder);
-	}
-	
-	public void excludeFolder(Item folder)
-	{
-		folders.excludeFolder(folder);
-	}
-	
-	public Parameters parameters()
-	{
-		return parameters;
-	}
 }

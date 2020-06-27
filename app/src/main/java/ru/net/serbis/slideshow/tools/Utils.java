@@ -1,4 +1,4 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.tools;
 
 import java.io.Closeable;
 

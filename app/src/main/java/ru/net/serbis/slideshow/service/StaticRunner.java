@@ -3,10 +3,11 @@ package ru.net.serbis.slideshow.service;
 import android.app.*;
 import android.content.*;
 import android.graphics.*;
+import android.view.*;
 import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.image.*;
-import android.view.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class StaticRunner extends Runner
 {

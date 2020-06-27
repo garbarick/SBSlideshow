@@ -34,13 +34,13 @@
 	<string name="file_type_mega">mega</string>
 	<string name="file_type_default">default</string>
 	
-	<string name="wall_folders"><u>Wallpaper Folders</u></string>
+	<string name="wall_folders">Wallpaper Folders</string>
 	<string name="add_system_folder">Add System Folder</string>
 	<string name="add_mega_folder">Add MEGA Folder</string>
 	<string name="exclude_folder">Exclude Folder</string>
 	<string name="choose_folder">Choose Folder</string>
 
-    <string name="parameters"><u>Parameters</u></string>
+    <string name="parameters">Parameters</string>
 
 	<string name="orientation">Orientation</string>
 	<string name="bydefault">Default</string>
@@ -49,5 +49,6 @@
 
     <string name="double_click_change">Double Click Change</string>
     <string name="shake_change">Shake Change</string>
-	
+
+    <string name="information">Information</string>
 </resources>

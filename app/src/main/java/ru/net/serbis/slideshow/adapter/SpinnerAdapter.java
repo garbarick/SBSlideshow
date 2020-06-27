@@ -5,6 +5,7 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class SpinnerAdapter extends ArrayAdapter<Integer>
 {
@@ -28,7 +29,7 @@ public class SpinnerAdapter extends ArrayAdapter<Integer>
 		}
 		
 		Integer value = getItem(position);
-		TextView text = (TextView)view.findViewById(R.id.value);
+		TextView text = UITools.findView(view, R.id.value);
 		text.setText(data.get(value));
 		
 		return view;

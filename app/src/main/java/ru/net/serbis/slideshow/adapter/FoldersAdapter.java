@@ -5,6 +5,7 @@ import android.view.*;
 import android.widget.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class FoldersAdapter extends ArrayAdapter<Item>
 {
@@ -29,8 +30,8 @@ public class FoldersAdapter extends ArrayAdapter<Item>
 		{
 			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
 			holder = new Holder();
-			holder.path = (TextView) view.findViewById(R.id.path);
-			holder.type = (TextView) view.findViewById(R.id.type);
+			holder.path = UITools.findView(view, R.id.path);
+			holder.type = UITools.findView(view, R.id.type);
 
 			view.setTag(holder);
 		}

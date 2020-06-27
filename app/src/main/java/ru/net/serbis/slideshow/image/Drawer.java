@@ -5,10 +5,8 @@ import android.graphics.*;
 import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.db.table.*;
+import ru.net.serbis.slideshow.tools.*;
 
-/**
- * SEBY0408
- */
 public class Drawer
 {
 	private Parameters parameters;

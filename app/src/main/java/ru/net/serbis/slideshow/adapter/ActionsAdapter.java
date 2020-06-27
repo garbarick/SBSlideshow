@@ -6,10 +6,8 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.tools.*;
 
-/**
- * SEBY0408
- */
 public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.OnItemClickListener
 {
 	private static int layoutId = R.layout.action;
@@ -119,8 +117,8 @@ public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.
 		{
 			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
 			holder = new Holder();
-			holder.image = (ImageView) view.findViewById(R.id.image);
-			holder.text = (CheckedTextView) view.findViewById(R.id.text);
+			holder.image = UITools.findView(view, R.id.image);
+			holder.text = UITools.findView(view, R.id.text);
 
 			view.setTag(holder);
 		}

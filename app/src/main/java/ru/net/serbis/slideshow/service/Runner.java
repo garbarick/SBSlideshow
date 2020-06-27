@@ -18,7 +18,7 @@ public class Runner
     {
         images = new Images(context);
         this.context = context;
-        parameters = new DBHelper(context).parameters();
+        parameters = new DBHelper(context).parameters;
 		drawer = new Drawer(parameters);
     }
     

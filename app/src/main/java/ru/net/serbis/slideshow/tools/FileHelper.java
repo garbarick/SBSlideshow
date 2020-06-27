@@ -1,16 +1,13 @@
-package ru.net.serbis.slideshow;
+package ru.net.serbis.slideshow.tools;
 
 import java.io.*;
 import java.util.*;
+import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.table.*;
 
 public class FileHelper
 {
-    private FileHelper()
-    {
-    }
-
     private static String getExt(String fileName)
     {
         String ext = "";
@@ -21,7 +18,7 @@ public class FileHelper
         }
         return ext;
     }
-    
+
     public static void findFiles(List<Item> folders, Files files)
     {
         for (Item folder : folders)
@@ -58,17 +55,17 @@ public class FileHelper
     {
         return fileName != null && new File(fileName).exists();
     }
-	
+
 	public static boolean checkExt(String fileName)
 	{
 		return Constants.EXTENSIONS.contains(getExt(fileName));
 	}
-	
+
 	public static boolean checkExt(File file)
 	{
 		return checkExt(file.getName());
 	}
-	
+
 	public static File getFile(String fileName)
     {
         if (exist(fileName))
