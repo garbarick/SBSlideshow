@@ -38,7 +38,7 @@ public abstract class Table
 		return execute(executer, false);
 	}
 	
-	public void executeUpdate(final String query, final String... args)
+	protected void executeUpdate(final String query, final String... args)
     {
 		execute(
 			new Executer<Void>()
@@ -53,7 +53,7 @@ public abstract class Table
 		);
     }
 	
-	public void executeUpdate(SQLiteDatabase db, String query, String... args)
+	protected void executeUpdate(SQLiteDatabase db, String query, String... args)
     {
 		if (args == null || args.length == 0)
 		{
@@ -72,7 +72,7 @@ public abstract class Table
 		}
 	}
 		
-	public boolean isExist(final String query, final String... args)
+	protected boolean isExist(final String query, final String... args)
     {
 		return execute(
 			new Executer<Boolean>()
@@ -85,28 +85,33 @@ public abstract class Table
 		);
     }
 	
-	private boolean isExist(SQLiteDatabase db, String query, String... args)
+	protected boolean isExist(SQLiteDatabase db, String query, String... args)
     {
 		Cursor cursor = db.rawQuery(query, args);
 		return cursor.moveToFirst();
 	}
 	
-	public String selectValue(final String query, final String... args)
+	protected String selectValue(final String query, final String... args)
     {
 		return execute(
 			new Executer<String>()
 			{
 			    public String execute(SQLiteDatabase db)
 				{
-					Cursor cursor = db.rawQuery(query, args);
-					if (cursor.moveToFirst())
-					{
-						return cursor.getString(0);
-					}
-					return null;
+					return selectValue(db, query, args);
 				}
 			}
 		);
+    }
+
+    protected String selectValue(SQLiteDatabase db, String query, String... args)
+    {
+        Cursor cursor = db.rawQuery(query, args);
+        if (cursor.moveToFirst())
+        {
+            return cursor.getString(0);
+        }
+        return null;
     }
 
 	protected boolean isTableExist(SQLiteDatabase db, String table)

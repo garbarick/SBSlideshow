@@ -48,8 +48,11 @@ public class Images
                 {
                     FileHelper.findFiles(systemFolders, files);
                 }
-            },
-            false);
+                public void finish()
+                {
+                    UITools.toast(context, "Local Files updated");
+                }
+            });
 		
 		if (!megaFolders.isEmpty())
         {

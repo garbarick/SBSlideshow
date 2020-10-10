@@ -15,11 +15,13 @@ import ru.net.serbis.slideshow.tools.*;
 
 public class MegaImages
 {
+    private Context context;
 	private DBHelper db;
 	private App app;
 
 	public MegaImages(Context context)
     {
+        this.context = context;
         db = new DBHelper(context);
 		app = (App) context.getApplicationContext();
     }
@@ -67,8 +69,11 @@ public class MegaImages
                 {
                     findFiles(fileList, files);
                 }
-            },
-            true);
+                public void finish()
+                {
+                    UITools.toast(context, "MEGA Files updated");
+                }
+            });
 	}
 
 	private void findFiles(String fileList, Files files)

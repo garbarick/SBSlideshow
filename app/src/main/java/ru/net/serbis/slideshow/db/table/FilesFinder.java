@@ -5,4 +5,5 @@ import android.database.sqlite.*;
 public interface FilesFinder
 {
     void find(Files files);
+    void finish();
 }
