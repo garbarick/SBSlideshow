@@ -48,7 +48,7 @@ public class Widget extends AppWidgetProvider
             Action action = Action.get(intent.getAction());
             if (action != null)
             {
-				runAction(context, action);
+                ActionsService.startAction(context, action);
             }
         }
         catch (Throwable e)
@@ -117,13 +117,4 @@ public class Widget extends AppWidgetProvider
             widgetManager.updateAppWidget(widgetId, views);
         }
     }
-	
-	private void runAction(Context context, Action action)
-	{
-		Intent intent = new Intent(context, ActionsService.class);
-		intent.setAction(action.name());
-		
-		context.startService(intent);
-		context.sendBroadcast(intent);
-	}
 }

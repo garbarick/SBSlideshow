@@ -28,4 +28,13 @@ public class ActionsService extends Service
 			new StaticRunner(getApplicationContext());
 	    runner.runActionInThread(action);
 	}
+    
+    public static void startAction(Context context, Action action)
+    {
+        Intent intent = new Intent(context, ActionsService.class);
+        intent.setAction(action.name());
+
+        context.startService(intent);
+		context.sendBroadcast(intent);
+    }
 }

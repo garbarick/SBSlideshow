@@ -110,6 +110,7 @@
 
         <activity
             android:name=".activity.Config"
+            android:theme="@style/Theme"
             android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -119,6 +120,7 @@
         <activity
             android:name=".activity.Settings"
             android:label="@string/app_name"
+            android:theme="@style/Theme"
             android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -132,20 +134,30 @@
         <activity
             android:name=".activity.Folders"
             android:label="@string/wall_folders"
+            android:theme="@style/Theme"
             android:resizeableActivity="true">
         </activity>
 
         <activity
             android:name=".activity.Parameters"
             android:label="@string/parameters"
+            android:theme="@style/Theme"
             android:resizeableActivity="true">
         </activity>
 
         <activity
             android:name=".activity.Information"
             android:label="@string/information"
+            android:theme="@style/Theme"
             android:resizeableActivity="true">
         </activity>
 
+        <activity
+            android:name=".activity.Controls"
+            android:label="@string/controls"
+            android:theme="@style/Theme"
+            android:resizeableActivity="true">
+        </activity>
+        
     </application>
 </manifest>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
     <string name="app_name">SBSlideshow</string>
     <string name="app_description">Slideshow by double tap from images on sdcard/Wallpapers</string>
     <string name="create_widget">Create Widget</string>
-	
+
     <string name="widget_name_1">SBSlideshow 1 buttons</string>
     <string name="widget_name_2">SBSlideshow 2 buttons</string>
     <string name="widget_name_3">SBSlideshow 3 buttons</string>
@@ -12,7 +11,7 @@
     <string name="widget_name_5">SBSlideshow 5 buttons</string>
     <string name="widget_name_6">SBSlideshow 6 buttons</string>
     <string name="widget_name_7">SBSlideshow 7 buttons</string>
-	
+
     <string-array name="actions">
         <item>Previous</item>
         <item>Next</item>
@@ -22,18 +21,18 @@
         <item>Separator</item>
         <item>Delete</item>
     </string-array>
-	
+
 	<string name="action_previous">Previous</string>
 	<string name="action_next">Next</string>
 	<string name="action_separator">Separator</string>
 	<string name="action_open">Open</string>
 	<string name="action_refresh">Refresh</string>
 	<string name="action_delete">Delete</string>
-	
+
 	<string name="file_type_system">system</string>
 	<string name="file_type_mega">mega</string>
 	<string name="file_type_default">default</string>
-	
+
 	<string name="wall_folders">Wallpaper Folders</string>
 	<string name="add_system_folder">Add System Folder</string>
 	<string name="add_mega_folder">Add MEGA Folder</string>
@@ -51,4 +50,7 @@
     <string name="shake_change">Shake Change</string>
 
     <string name="information">Information</string>
+    <string name="refresh">Refresh</string>
+
+    <string name="controls">Controls</string>
 </resources>

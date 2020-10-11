@@ -7,10 +7,8 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.tools.*;
 
-public class FoldersAdapter extends ArrayAdapter<Item>
+public class FoldersAdapter extends Adapter<Item>
 {
-	private static int layoutId = R.layout.folder;
-	
 	private class Holder
 	{
 		private TextView path;
@@ -19,7 +17,7 @@ public class FoldersAdapter extends ArrayAdapter<Item>
 	
 	public FoldersAdapter(Context context)
 	{
-		super(context, layoutId);
+		super(context, R.layout.folder);
 	}
 	
 	@Override
@@ -28,7 +26,7 @@ public class FoldersAdapter extends ArrayAdapter<Item>
 		Holder holder;
 		if (view == null)
 		{
-			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
+			view = makeView(parent);
 			holder = new Holder();
 			holder.path = UITools.findView(view, R.id.path);
 			holder.type = UITools.findView(view, R.id.type);

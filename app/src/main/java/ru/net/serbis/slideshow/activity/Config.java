@@ -1,5 +1,6 @@
 package ru.net.serbis.slideshow.activity;
 
+import android.app.*;
 import android.appwidget.*;
 import android.content.*;
 import android.os.*;
@@ -7,11 +8,9 @@ import android.view.*;
 import android.widget.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
+import ru.net.serbis.slideshow.tools.*;
 
-/**
- * SEBY0408
- */
-public class Config extends android.app.Activity
+public class Config extends Activity
 {
     private int widgetId;
     private Button createWidget;
@@ -26,8 +25,8 @@ public class Config extends android.app.Activity
         setContentView(R.layout.config);
         setResult(RESULT_CANCELED);
 
-        createWidget = (Button) findViewById(R.id.createWidget);
-        items = (ListView) findViewById(R.id.buttons);
+        createWidget = UITools.findView(this, R.id.createWidget);
+        items = UITools.findView(this, R.id.buttons);
         widgetId = getIntent().getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         widget = getWidget(this, widgetId);
 

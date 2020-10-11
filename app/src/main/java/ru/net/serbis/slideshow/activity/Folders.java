@@ -7,11 +7,10 @@ import android.widget.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.adapter.Adapter;
 
-public class Folders extends Base
+public class Folders extends Base<Item>
 {
-    private FoldersAdapter folderAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,28 +19,31 @@ public class Folders extends Base
     }
 
     @Override
+    protected Adapter<Item> getAdapter()
+    {
+        return new FoldersAdapter(this);
+    }
+
+    @Override
     protected void initAdapter()
     {
-        folderAdapter = new FoldersAdapter(this);
-        setListAdapter(folderAdapter);
-        initFolderAdapter();
-	}
-
-    private void initFolderAdapter()
+        super.initAdapter();
+        refreshAdapter();
+    }
+    
+    private void refreshAdapter()
     {
-        folderAdapter.setNotifyOnChange(false);
-        folderAdapter.clear();
-        folderAdapter.addAll(db.getFolders());
-        folderAdapter.setNotifyOnChange(true);
-        folderAdapter.notifyDataSetChanged();
+        adapter.setNotifyOnChange(false);
+        adapter.clear();
+        adapter.addAll(db.getFolders());
+        adapter.setNotifyOnChange(true);
+        adapter.notifyDataSetChanged();
 	}
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected int getOptionMenuId()
     {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.folders, menu);
-        return true;
+        return R.menu.folders;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class Folders extends Base
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo)
     {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Item folder = folderAdapter.getItem(info.position);
+        Item folder = adapter.getItem(info.position);
 
         menu.setHeaderTitle(folder.getPath());
         MenuInflater inflater = getMenuInflater();
@@ -65,27 +67,18 @@ public class Folders extends Base
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (onItemMenuSelected(item.getItemId(), null))
-        {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onContextItemSelected(MenuItem item)
     {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        if (onItemMenuSelected(item.getItemId(), folderAdapter.getItem(info.position)))
+        if (onItemMenuSelected(item.getItemId(), adapter.getItem(info.position)))
         {
             return true;
         }
         return super.onContextItemSelected(item);
     }
 
-    public boolean onItemMenuSelected(int id, Item folder)
+    @Override
+    public boolean onItemMenuSelected(int id, Item item)
     {
         switch (id)
         {
@@ -98,11 +91,11 @@ public class Folders extends Base
                 return true;
 
             case R.id.exclude_folder:
-                db.folders.excludeFolder(folder);
-                initFolderAdapter();
+                db.folders.excludeFolder(item);
+                refreshAdapter();
                 return true;
         }
-        return false;
+        return super.onItemMenuSelected(id, item);
     }
 
     private void addSystemFolder()
@@ -112,7 +105,7 @@ public class Folders extends Base
             public void onChoose(String path)
             {
                 db.folders.addFolder(new Item(path, FileType.System));
-                initFolderAdapter();
+                refreshAdapter();
             }
         };
     }
@@ -137,7 +130,7 @@ public class Folders extends Base
                     {
                         String path = data.getStringExtra(Constants.MEGA_SELECT_PATH);
                         db.folders.addFolder(new Item(path, FileType.Mega));
-                        initFolderAdapter();
+                        refreshAdapter();
                     }
                     break;
             }

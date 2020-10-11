@@ -3,21 +3,21 @@ package ru.net.serbis.slideshow.adapter;
 import ru.net.serbis.slideshow.data.*;
 import java.util.*;
 
-public class ParameterView
+public class ParameterData
 {
     private int nameId;
     private int layoutId;
     private Parameter param;
     private Map<Integer, Integer> data;
 
-    public ParameterView(int nameId, int layourId, Parameter param)
+    public ParameterData(int nameId, int layourId, Parameter param)
     {
         this.nameId = nameId;
         this.layoutId = layourId;
         this.param = param;
     }
     
-    public ParameterView(int nameId, int layoutId, Parameter param, Map<Integer, Integer> data)
+    public ParameterData(int nameId, int layoutId, Parameter param, Map<Integer, Integer> data)
     {
         this(nameId, layoutId, param);
         this.data = data;

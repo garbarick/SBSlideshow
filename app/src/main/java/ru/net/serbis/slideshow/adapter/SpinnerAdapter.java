@@ -7,15 +7,13 @@ import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.tools.*;
 
-public class SpinnerAdapter extends ArrayAdapter<Integer>
+public class SpinnerAdapter extends Adapter<Integer>
 {
-	private static int layoutId = R.layout.value;
-
 	private Map<Integer, Integer> data;
 	
 	public SpinnerAdapter(Context context, Map<Integer, Integer> data)
 	{
-		super(context, layoutId);
+		super(context, R.layout.value);
         this.data = data;
 		addAll(data.keySet());
 	}
@@ -25,7 +23,7 @@ public class SpinnerAdapter extends ArrayAdapter<Integer>
 	{
 		if (view == null)
 		{
-			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
+			view = makeView(parent);
 		}
 		
 		Integer value = getItem(position);

@@ -3,7 +3,6 @@ package ru.net.serbis.slideshow.adapter;
 import android.content.*;
 import android.view.*;
 import android.widget.*;
-import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
@@ -11,22 +10,21 @@ import ru.net.serbis.slideshow.db.table.*;
 import ru.net.serbis.slideshow.service.*;
 import ru.net.serbis.slideshow.tools.*;
 
-public class ParametersAdapter extends ArrayAdapter<ParameterView>
+public class ParametersAdapter extends Adapter<ParameterData>
 {
-    private static List<ParameterView> getList()
+    private void init()
     {
-        List<ParameterView> result = new ArrayList<ParameterView>();
-        result.add(new ParameterView(R.string.orientation, R.layout.param_spinner, Constants.ORIENTATION, Constants.ORIENTATIONS));
-        result.add(new ParameterView(R.string.double_click_change, R.layout.param_switch, Constants.DOUBLE_CLICK_CHANGE));
-        result.add(new ParameterView(R.string.shake_change, R.layout.param_switch, Constants.SHAKE_CHANGE));
-        return result;
+        add(new ParameterData(R.string.orientation, R.layout.param_spinner, Constants.ORIENTATION, Constants.ORIENTATIONS));
+        add(new ParameterData(R.string.double_click_change, R.layout.param_switch, Constants.DOUBLE_CLICK_CHANGE));
+        add(new ParameterData(R.string.shake_change, R.layout.param_switch, Constants.SHAKE_CHANGE));
     };
     
     private Parameters parameters;
     
     public ParametersAdapter(Context context)
     {
-        super(context, 0, getList());
+        super(context, 0);
+        init();
         parameters = new DBHelper(context).parameters;
         initParameters();
     }
@@ -35,7 +33,7 @@ public class ParametersAdapter extends ArrayAdapter<ParameterView>
     {
         for(int i = 0; i < getCount(); i++)
         {
-            ParameterView view = getItem(i);
+            ParameterData view = getItem(i);
             Parameter param = view.getParam();
             param.setValue(parameters.getValue(param));
         }
@@ -44,8 +42,8 @@ public class ParametersAdapter extends ArrayAdapter<ParameterView>
     @Override
     public View getView(int position, View view, ViewGroup parent)
     {
-        ParameterView paramView = getItem(position);
-        view = LayoutInflater.from(getContext()).inflate(paramView.getLayoutId(), null);
+        ParameterData paramView = getItem(position);
+        view = makeView(parent, paramView.getLayoutId());
         
         TextView text = UITools.findView(view, R.id.name);
         text.setText(paramView.getNameId());
@@ -63,7 +61,7 @@ public class ParametersAdapter extends ArrayAdapter<ParameterView>
         return view;
 	}
 
-    private void initSwitch(View view, ParameterView paramView)
+    private void initSwitch(View view, ParameterData paramView)
     {
         final Parameter param = paramView.getParam();
         Switch item = UITools.findView(view, R.id.value);
@@ -82,7 +80,7 @@ public class ParametersAdapter extends ArrayAdapter<ParameterView>
         );
     }
     
-    private void initSpinner(View view, ParameterView paramView)
+    private void initSpinner(View view, ParameterData paramView)
     {
         final Parameter param = paramView.getParam();
         Spinner item = UITools.findView(view, R.id.value);

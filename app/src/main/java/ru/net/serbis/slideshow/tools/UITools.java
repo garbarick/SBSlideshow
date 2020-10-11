@@ -1,5 +1,6 @@
 package ru.net.serbis.slideshow.tools;
 
+import android.app.*;
 import android.content.*;
 import android.os.*;
 import android.view.*;
@@ -8,6 +9,11 @@ import android.widget.*;
 public class UITools
 {
     public static <T> T findView(View view, int id)
+    {
+        return (T) view.findViewById(id);
+    }
+
+    public static <T> T findView(Activity view, int id)
     {
         return (T) view.findViewById(id);
     }

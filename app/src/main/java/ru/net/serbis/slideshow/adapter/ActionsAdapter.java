@@ -1,6 +1,6 @@
 package ru.net.serbis.slideshow.adapter;
 
-import android.app.*;
+import android.content.*;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
@@ -8,10 +8,8 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.tools.*;
 
-public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.OnItemClickListener
+public class ActionsAdapter extends Adapter<Action> implements AdapterView.OnItemClickListener
 {
-	private static int layoutId = R.layout.action;
-
 	private class Holder
 	{
 		private ImageView image;
@@ -23,14 +21,14 @@ public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.
     private Map<Integer, Boolean> checked = new HashMap<Integer, Boolean>();
     private List<Integer> separators = new ArrayList<Integer>();
 
-    public ActionsAdapter(Activity context, int maxCountChecked)
+    public ActionsAdapter(Context context, int maxCountChecked)
     {
-        super(context, layoutId);
+        super(context, R.layout.action);
         this.maxCountChecked = maxCountChecked;
-        initItems();
+        init();
     }
 
-    private void initItems()
+    private void init()
     {
         int position = 0;
         for (String name : getContext().getResources().getStringArray(R.array.actions))
@@ -115,7 +113,7 @@ public class ActionsAdapter extends ArrayAdapter<Action> implements AdapterView.
 		Holder holder;
 		if (view == null)
 		{
-			view = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
+			view = makeView(parent);
 			holder = new Holder();
 			holder.image = UITools.findView(view, R.id.image);
 			holder.text = UITools.findView(view, R.id.text);
