@@ -37,7 +37,7 @@ public class Information extends Table
                 public List<Info> execute(SQLiteDatabase db)
                 {
                     List<Info> result = new ArrayList<Info>();
-                    Cursor cursor = db.rawQuery(getQuery(), null);
+                    Cursor cursor = query(db, getQuery());
                     if (cursor.moveToFirst())
                     {
                         for(int i = 0; i < cursor.getColumnCount(); i++)

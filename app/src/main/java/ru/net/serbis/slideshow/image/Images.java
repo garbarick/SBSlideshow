@@ -40,7 +40,8 @@ public class Images
 					break;
 			}
         }
-        
+
+        db.files.clearExist();
         db.files.initFiles(
             new FilesFinder()
             {
@@ -48,18 +49,16 @@ public class Images
                 {
                     FileHelper.findFiles(systemFolders, files);
                 }
-                public void finish()
-                {
-                    UITools.toast(context, "Local Files updated");
-                }
             });
-		
+		UITools.toast(context, "Local Files updated");
+
 		if (!megaFolders.isEmpty())
         {
 			new MegaImages(context).getFilesList(runner, megaFolders);
         }
 		else
 		{
+            db.files.excludeNoExist();
 			runner.drawAction();
 		}
     }

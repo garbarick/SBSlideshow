@@ -12,7 +12,6 @@ public class Files extends Table
 {
     private static final String FILES = "files";
     private static final String TEMP = "temp";
-    private static final String TEMP2 = "temp2";
     private static final String CURRENT = "current";
     
     private SQLiteStatement insertFile;
@@ -29,6 +28,7 @@ public class Files extends Table
 		{
 			createFilesTable(db);
 		}
+        addColumn(db, FILES, "exist", "integer default 0");
 		if (!isTableExist(db, CURRENT))
 		{
 			createCurrentTable(db);
@@ -37,7 +37,7 @@ public class Files extends Table
 
 	private void createFilesTable(SQLiteDatabase db)
     {
-        db.execSQL("create table " + FILES + "(id integer primary key autoincrement, path text)");
+        db.execSQL("create table " + FILES + "(id integer primary key autoincrement, path text, exist integer default 0)");
     }
 
 	private void createCurrentTable(SQLiteDatabase db)
@@ -47,12 +47,7 @@ public class Files extends Table
 
     private void createTempTable(SQLiteDatabase db)
     {
-        db.execSQL("create table " + TEMP + "(path text)");
-    }
-    
-    private void createTemp2Table(SQLiteDatabase db)
-    {
-        db.execSQL("create table " + TEMP2 + "(path text)");
+        db.execSQL("create table " + TEMP + "(path text, exist integer)");
     }
 
     private void dropTable(SQLiteDatabase db, String table)
@@ -85,16 +80,19 @@ public class Files extends Table
 
         dropTable(db, TEMP);
         createTempTable(db);
-        
+
+        insertFile = db.compileStatement("insert into " + TEMP + "(path, exist) values(?, 1)");
+		finder.find(this);
+
         boolean hasNext = hasNext(db);
         if (hasNext)
         {
-            dropTable(db, TEMP2);
-            createTemp2Table(db);
+            updateExist(db, FILES, TEMP);
+            excludeTableFromTable(db, TEMP, FILES);
             executeUpdate(
                 db,
-                "insert into " + TEMP2 + "(path)" +
-                " select path from " + FILES +
+                "insert into " + TEMP + "(path, exist)" +
+                " select path, exist from " + FILES +
                 "  where id > (" +
                 " select path_id from " + CURRENT + ")");
             executeUpdate(
@@ -108,27 +106,11 @@ public class Files extends Table
             dropTable(db, FILES);        
             createFilesTable(db);
         }
-
-        insertFile = db.compileStatement("insert into " + TEMP + "(path) values(?)");
-		finder.find(this);
-
-        if (hasNext)
-        {
-            excludeTableFromTable(db, TEMP, FILES);
-            excludeTableFromTable(db, TEMP2, TEMP);
-            excludeTableFromTable(db, TEMP, TEMP2);
-            executeUpdate(
-                db,
-                "insert into " + TEMP + "(path)" +
-                "select path from " + TEMP2);
-            dropTable(db, TEMP2);
-        }
         
         executeUpdate(
             db,
-            "insert into " + FILES + "(path)" +
-            " select path from " + TEMP + " order by random()");
-        count(db, FILES);
+            "insert into " + FILES + "(path, exist)" +
+            " select path, exist from " + TEMP + " order by random()");
         
         if (hasNext)
         {
@@ -147,7 +129,6 @@ public class Files extends Table
         db.setTransactionSuccessful();
         db.endTransaction();
         Log.info(this, "finish initFiles");
-        finder.finish();
     }
 
     public void addFile(String fileName)
@@ -170,6 +151,16 @@ public class Files extends Table
             "delete from " + fromTable +
             " where path in (" +
             "select path from " + byTable + ")");
+    }
+
+    private void updateExist(SQLiteDatabase db, String table, String byTable)
+    {
+        executeUpdate(
+            db,
+            "update " + table +
+            " set exist = 1" +
+            " where path in (" +
+            "select path from " + byTable + ")");        
     }
 
     private String HAS_NEXT =
@@ -235,5 +226,15 @@ public class Files extends Table
 			"delete from " + FILES +
 			" where id in (" +
             "select path_id from " + CURRENT + ")");
+    }
+
+    public void clearExist()
+    {
+        executeUpdate("update " + FILES + " set exist = 0");
+    }
+
+    public void excludeNoExist()
+    {
+        executeUpdate("delete from " + FILES + " where exist = 0");
     }
 }

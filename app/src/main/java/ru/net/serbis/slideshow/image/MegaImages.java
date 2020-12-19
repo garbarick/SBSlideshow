@@ -56,6 +56,8 @@ public class MegaImages
         else
         {
             Log.info(this, "mega folders finished");
+            UITools.toast(context, "MEGA Files updated");
+            db.files.excludeNoExist();
             runner.drawAction();
         }
 	}
@@ -68,10 +70,6 @@ public class MegaImages
                 public void find(Files files)
                 {
                     findFiles(fileList, files);
-                }
-                public void finish()
-                {
-                    UITools.toast(context, "MEGA Files updated");
                 }
             });
 	}

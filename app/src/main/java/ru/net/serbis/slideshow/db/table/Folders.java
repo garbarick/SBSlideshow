@@ -56,7 +56,7 @@ public class Folders extends Table
 				public List<Item> execute(SQLiteDatabase db)
 				{
 					List<Item> result = new ArrayList<Item>();
-					Cursor cursor = db.rawQuery("select path, type from folders order by path", null);
+					Cursor cursor = query(db, "select path, type from folders order by path");
 					if (cursor.moveToFirst())
 					{
 						do

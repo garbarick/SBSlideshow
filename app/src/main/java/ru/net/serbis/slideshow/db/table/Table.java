@@ -84,10 +84,15 @@ public abstract class Table
 			}
 		);
     }
-	
+
+    protected Cursor query(SQLiteDatabase db, String query, String... args)
+    {
+        return db.rawQuery(query, args);
+    }
+
 	protected boolean isExist(SQLiteDatabase db, String query, String... args)
     {
-		Cursor cursor = db.rawQuery(query, args);
+		Cursor cursor = query(db, query, args);
 		return cursor.moveToFirst();
 	}
 	
@@ -106,7 +111,7 @@ public abstract class Table
 
     protected String selectValue(SQLiteDatabase db, String query, String... args)
     {
-        Cursor cursor = db.rawQuery(query, args);
+        Cursor cursor = query(db, query, args);
         if (cursor.moveToFirst())
         {
             return cursor.getString(0);
@@ -124,4 +129,31 @@ public abstract class Table
 			"   and name = ?",
 			table);
 	}
+
+    protected boolean isCoumnExist(SQLiteDatabase db, String table, String column)
+    {
+        Cursor cursor = query(db, "pragma table_info(" + table + ")");
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                if (column.equalsIgnoreCase(name))
+                {
+                    return true;
+                }
+            }
+            while(cursor.moveToNext());
+        }
+        return false;
+    }
+    
+    protected void addColumn(SQLiteDatabase db, String table, String column, String type)
+    {
+        if (isCoumnExist(db, table, column))
+        {
+            return;
+        }
+        db.execSQL("alter table " + table + " add column " + column + " " + type);
+    }
 }
