@@ -108,7 +108,7 @@ public class Widget extends AppWidgetProvider
                 }
             }
 
-            for (; indexViewId < Constants.VIEWS.size(); indexViewId++)
+            for (; indexViewId < count; indexViewId++)
             {
                 int viewId = Constants.VIEWS.get(indexViewId);
                 views.setViewVisibility(viewId, View.GONE);

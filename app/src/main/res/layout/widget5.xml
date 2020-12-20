@@ -9,43 +9,31 @@
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:id="@+id/id1"
-		android:src="@drawable/app"/>
+		android:src="@drawable/button"/>
 
 	<ImageView
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:id="@+id/id2"
-		android:src="@drawable/app"/>
+		android:src="@drawable/button"/>
 
 	<ImageView
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:id="@+id/id3"
-		android:src="@drawable/app"/>
+		android:src="@drawable/button"/>
 
 	<ImageView
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:id="@+id/id4"
-		android:src="@drawable/app"/>
+		android:src="@drawable/button"/>
 
 	<ImageView
 		android:layout_width="32dp"
 		android:layout_height="32dp"
 		android:id="@+id/id5"
-		android:src="@drawable/app"/>
-
-	<ImageView
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:id="@+id/id6"
-		android:src="@drawable/app"/>
-
-	<ImageView
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:id="@+id/id7"
-		android:src="@drawable/app"/>
+		android:src="@drawable/button"/>
 
 </LinearLayout>
 
