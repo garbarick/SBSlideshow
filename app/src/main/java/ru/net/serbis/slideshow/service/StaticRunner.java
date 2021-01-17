@@ -45,9 +45,9 @@ public class StaticRunner extends Runner
                 manager.clear();
             }
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
-            Log.info(this, "error on set wallpaper", e);
+            Log.error(this, "error on set wallpaper", e);
         }
     }
 
@@ -65,9 +65,9 @@ public class StaticRunner extends Runner
                 manager.setBitmap(image);
             }
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
-            Log.info(this, "error on drawImage", e);
+            Log.error(this, "error on drawImage", e);
         }
         finally
         {

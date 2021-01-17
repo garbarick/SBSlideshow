@@ -24,12 +24,12 @@ public class Parameters extends Table
 
 	private void createTable(SQLiteDatabase db)
 	{
-		db.execSQL("create table parameters(name text primary key, value text)");
+        executeUpdate(db, R.raw.create_parameters_table);
 	}
 	
 	public String getValue(String name, String defaultValue)
 	{
-		String result = selectValue("select value from parameters where name = ?", name);
+		String result = selectValue(R.raw.get_parameter_value, name);
 		return result == null ? defaultValue : result;
 	}
     
@@ -62,8 +62,8 @@ public class Parameters extends Table
 	
 	public void setValue(String name, String value)
 	{
-		executeUpdate("delete from parameters where name = ?", name);
-		executeUpdate("insert into parameters(name, value) values(?, ?)", name, value);
+		executeUpdate(R.raw.delete_parameter, name);
+		executeUpdate(R.raw.add_parameter, name, value);
 	}
 	
 	public void setValue(String name, int value)

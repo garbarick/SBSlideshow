@@ -145,9 +145,9 @@ public class ImageService extends WallpaperService
 				canvas = holder.lockCanvas();
 				drawer.drawImage(canvas, fileName);
 			}
-			catch (Throwable e)
+			catch (Exception e)
 			{
-				Log.info(this, "error on draw", e);
+				Log.error(this, "error on draw", e);
 			}
 			finally
 			{

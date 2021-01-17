@@ -70,9 +70,9 @@ public class Config extends Activity
             Class clazz = Class.forName(widgetManager.getAppWidgetInfo(widgetId).provider.getClassName());
             return (Widget) clazz.newInstance();
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
-            Log.info(this, "error on initWidget", e);
+            Log.error(this, "error on initWidget", e);
             return null;
         }
     }

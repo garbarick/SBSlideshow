@@ -51,9 +51,9 @@ public class Widget extends AppWidgetProvider
                 ActionsService.startAction(context, action);
             }
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
-            Log.info(this, "error onReceive", e);
+            Log.error(this, "error onReceive", e);
         }
     }
 

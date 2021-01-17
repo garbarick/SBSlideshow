@@ -3,6 +3,7 @@ package ru.net.serbis.slideshow.db.table;
 import android.database.*;
 import android.database.sqlite.*;
 import java.util.*;
+import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
 
@@ -24,18 +25,17 @@ public class Folders extends Table
 
 	private void createTable(SQLiteDatabase db)
 	{
-		db.execSQL("create table folders(path text primary key, type text)");
+        executeUpdate(db, R.raw.create_folders_table);
 	}
 
 	public void addFolder(Item folder)
 	{
 		if (!isExist(
-				"select 1 from folders where path = ?",
+				R.raw.is_folder_exist,
 				folder.getPath()))
 		{
 			executeUpdate(
-				"insert into folders(path, type)" +
-				" values(?, ?)",
+				R.raw.add_folder,
 				folder.getPath(),
 				folder.getType().toString());
 		}
@@ -44,7 +44,7 @@ public class Folders extends Table
 	public void excludeFolder(Item folder)
 	{
 		executeUpdate(
-			"delete from folders where path = ?",
+			R.raw.exclude_folder,
 			folder.getPath());
 	}
 
@@ -56,7 +56,7 @@ public class Folders extends Table
 				public List<Item> execute(SQLiteDatabase db)
 				{
 					List<Item> result = new ArrayList<Item>();
-					Cursor cursor = query(db, "select path, type from folders order by path");
+					Cursor cursor = query(db, R.raw.get_folders);
 					if (cursor.moveToFirst())
 					{
 						do

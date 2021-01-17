@@ -48,9 +48,9 @@ public class Drawer
                 drawBitmap(image, canvas);
             }
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
-            Log.info(this, "error on drawImage", e);
+            Log.error(this, "error on drawImage", e);
         }
         finally
         {
@@ -141,7 +141,7 @@ public class Drawer
         }
         catch(Exception e)
         {
-            Log.info(this, "error on saveImage", e);
+            Log.error(this, "error on saveImage", e);
         }
         finally
         {

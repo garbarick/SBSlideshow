@@ -14,10 +14,17 @@ public class DBHelper extends SQLiteOpenHelper
 	public Folders folders = new Folders(this);
 	public Parameters parameters = new Parameters(this);
 	public Information information = new Information(this);
+    private Context context;
     
     public DBHelper(Context context)
     {
         super(context, "db", null, 4);
+        this.context = context;
+    }
+
+    public Context getContext()
+    {
+        return context;
     }
 
     @Override
@@ -29,9 +36,9 @@ public class DBHelper extends SQLiteOpenHelper
 			{
 				table.init(db);
 			}
-			catch (Throwable e)
+			catch (Exception e)
 			{
-				Log.info(this, "Error on init", e);
+				Log.error(this, "Error on init", e);
 			}
 		}
     }

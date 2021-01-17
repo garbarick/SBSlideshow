@@ -92,7 +92,7 @@ public class MegaImages
 		}
 		catch (Throwable e)
 		{
-			Log.info(this, e);
+			Log.error(this, e);
 		}
 		finally
 		{
@@ -178,7 +178,7 @@ public class MegaImages
 		}
 		catch (RemoteException e)
 		{
-			Log.info(this, e);
+			Log.error(this, e);
 		}
 	}
 }

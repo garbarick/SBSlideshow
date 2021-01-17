@@ -1,22 +1,34 @@
 package ru.net.serbis.slideshow;
 
-/**
- * SEBY0408
- */
 public class Log
 {
-    public static void info(Object object, String message)
+    public static void info(Class clazz, String message)
     {
-        android.util.Log.i(object.getClass().getName(), message);
+        android.util.Log.i(clazz.getName(), message);
     }
 
-    public static void info(Object object, String message, Throwable e)
+    public static void info(Object object, String message)
     {
-        android.util.Log.i(object.getClass().getName(), message, e);
+        info(object.getClass(), message);
     }
-	
-	public static void info(Object object, Throwable e)
+
+    public static void error(Class clazz, String message, Throwable e)
     {
-        android.util.Log.i(object.getClass().getName(), "Error", e);
+        android.util.Log.e(clazz.getName(), message, e);
+    }
+
+    public static void error(Object object, String message, Throwable e)
+    {
+        error(object.getClass(), message, e);
+    }
+
+    public static void error(Class clazz, Throwable e)
+    {
+        error(clazz, "Error", e);
+    }
+
+	public static void error(Object object, Throwable e)
+    {
+        error(object.getClass(), e);
     }
 }

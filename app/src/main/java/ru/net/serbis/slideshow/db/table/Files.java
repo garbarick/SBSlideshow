@@ -1,12 +1,11 @@
 package ru.net.serbis.slideshow.db.table;
 
-import android.database.*;
 import android.database.sqlite.*;
 import android.text.*;
-import java.util.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class Files extends Table
 {
@@ -37,17 +36,17 @@ public class Files extends Table
 
 	private void createFilesTable(SQLiteDatabase db)
     {
-        db.execSQL("create table " + FILES + "(id integer primary key autoincrement, path text, exist integer default 0)");
+        executeUpdate(db, R.raw.create_files_table);
     }
 
 	private void createCurrentTable(SQLiteDatabase db)
     {
-        db.execSQL("create table " + CURRENT + "(path_id integer)");
+        executeUpdate(db, R.raw.create_current_table);
     }
 
     private void createTempTable(SQLiteDatabase db)
     {
-        db.execSQL("create table " + TEMP + "(path text, exist integer)");
+        executeUpdate(db, R.raw.create_temp_table);
     }
 
     private void dropTable(SQLiteDatabase db, String table)
@@ -81,7 +80,7 @@ public class Files extends Table
         dropTable(db, TEMP);
         createTempTable(db);
 
-        insertFile = db.compileStatement("insert into " + TEMP + "(path, exist) values(?, 1)");
+        insertFile = db.compileStatement(Utils.getRaw(helper, R.raw.add_into_temp));
 		finder.find(this);
 
         boolean hasNext = hasNext(db);
@@ -89,17 +88,8 @@ public class Files extends Table
         {
             updateExist(db, FILES, TEMP);
             excludeTableFromTable(db, TEMP, FILES);
-            executeUpdate(
-                db,
-                "insert into " + TEMP + "(path, exist)" +
-                " select path, exist from " + FILES +
-                "  where id > (" +
-                " select path_id from " + CURRENT + ")");
-            executeUpdate(
-                db,
-                "delete from " + FILES +
-                " where id > (" +
-                " select path_id from " + CURRENT + ")");
+            executeUpdate(db, R.raw.add_temp_files_after_current);
+            executeUpdate(db, R.raw.exclude_files_after_current);
         }
         else
         {
@@ -107,21 +97,14 @@ public class Files extends Table
             createFilesTable(db);
         }
         
-        executeUpdate(
-            db,
-            "insert into " + FILES + "(path, exist)" +
-            " select path, exist from " + TEMP + " order by random()");
+        executeUpdate(db, R.raw.add_random_files);
         
         if (hasNext)
         {
         }
         else
         {
-            executeUpdate(
-                db,
-                "update " + CURRENT +
-                "   set path_id = (" +
-                " select min(id) from " + FILES + ")");
+            executeUpdate(db, R.raw.update_current);
         }
 
         dropTable(db, TEMP);
@@ -138,81 +121,56 @@ public class Files extends Table
         insertFile.execute();
     }
 
-    private void count(SQLiteDatabase db, String table)
-    {
-        String count = selectValue(db, "select count(1) from " + table);
-        Log.info(this, "count in " + table + ": " + count);
-    }
-
-    private void excludeTableFromTable(SQLiteDatabase db, String fromTable, String byTable)
+    private void excludeTableFromTable(SQLiteDatabase db, String table, String byTable)
     {
         executeUpdate(
             db,
-            "delete from " + fromTable +
-            " where path in (" +
-            "select path from " + byTable + ")");
+            Utils.getRaw(
+                helper, R.raw.exclude_table_by_table,
+                "{table}", table,
+                "{byTable}", byTable));
     }
 
     private void updateExist(SQLiteDatabase db, String table, String byTable)
     {
         executeUpdate(
             db,
-            "update " + table +
-            " set exist = 1" +
-            " where path in (" +
-            "select path from " + byTable + ")");        
+            Utils.getRaw(
+                helper, R.raw.update_exist,
+                "{table}", table,
+                "{byTable}", byTable));        
     }
-
-    private String HAS_NEXT =
-        "select id" +
-        "  from " + FILES + "," + CURRENT +
-        " where id > path_id limit 1";
 
     public boolean hasNext()
     {
-        return isExist(HAS_NEXT);
+        return isExist(R.raw.has_next);
     }
 
     private boolean hasNext(SQLiteDatabase db)
     {
-        return isExist(db, HAS_NEXT);
+        return isExist(db, R.raw.has_next);
     }
 
     public void next()
     {
-		executeUpdate(
-            "update " + CURRENT +
-            "   set path_id = (" +
-            "select min(id) from " + FILES +
-            " where id > path_id)");
+		executeUpdate(R.raw.set_next);
     }
 
     public boolean hasPrevious()
     {
-        return isExist(
-            "select id" +
-            "  from " + FILES + "," + CURRENT +
-            " where id < path_id limit 1");
+        return isExist(R.raw.had_previous);
     }
 
     public void previous()
     {
-        executeUpdate(
-            "update " + CURRENT +
-            "   set path_id = (" +
-            "select max(id) from " + FILES +
-            " where id < path_id)");
+        executeUpdate(R.raw.set_previous);
     }
 
     public Item getCurrentItem()
     {
-		String current = selectValue(
-			"select path" +
-            "  from " + FILES + "," + CURRENT +
-			" where id = path_id");
-        
+		String current = selectValue(R.raw.get_current_item);
         Log.info(this, "current=" + current);
-        
+
 		FileType type = !TextUtils.isEmpty(current) &&
 			current.startsWith(Constants.MEGA_PREFIX) ?
 			FileType.Mega : FileType.System;
@@ -222,19 +180,16 @@ public class Files extends Table
 
     public void deleteCurrent()
     {
-		executeUpdate(
-			"delete from " + FILES +
-			" where id in (" +
-            "select path_id from " + CURRENT + ")");
+		executeUpdate(R.raw.delete_current);
     }
 
     public void clearExist()
     {
-        executeUpdate("update " + FILES + " set exist = 0");
+        executeUpdate(R.raw.clear_exist);
     }
 
     public void excludeNoExist()
     {
-        executeUpdate("delete from " + FILES + " where exist = 0");
+        executeUpdate(R.raw.exclude_no_exist);
     }
 }

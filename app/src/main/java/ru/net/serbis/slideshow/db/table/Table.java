@@ -2,7 +2,9 @@ package ru.net.serbis.slideshow.db.table;
 
 import android.database.*;
 import android.database.sqlite.*;
+import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public abstract class Table
 {
@@ -10,16 +12,16 @@ public abstract class Table
 	{
 		T execute(SQLiteDatabase db);
 	}
-	
+
 	protected DBHelper helper;
 
 	public Table(DBHelper helper)
 	{
 		this.helper = helper;
 	}
-	
+
 	public abstract void init(SQLiteDatabase db);
-	
+
 	protected <T> T execute(Executer<T> executer, boolean write)
 	{
 		SQLiteDatabase db = write ? helper.getWritableDatabase() : helper.getReadableDatabase();
@@ -32,12 +34,12 @@ public abstract class Table
             db.close();
         }
 	}
-	
+
 	protected <T> T execute(Executer<T> executer)
 	{
 		return execute(executer, false);
 	}
-	
+
 	protected void executeUpdate(final String query, final String... args)
     {
 		execute(
@@ -52,7 +54,12 @@ public abstract class Table
 			true
 		);
     }
-	
+
+    protected void executeUpdate(int queryResource, String... args)
+    {
+        executeUpdate(Utils.getRaw(helper, queryResource), args);
+    }
+
 	protected void executeUpdate(SQLiteDatabase db, String query, String... args)
     {
 		if (args == null || args.length == 0)
@@ -71,7 +78,12 @@ public abstract class Table
 			statement.execute();
 		}
 	}
-		
+
+    protected void executeUpdate(SQLiteDatabase db, int queryResource, String... args)
+    {
+        executeUpdate(db, Utils.getRaw(helper, queryResource), args);
+    }
+
 	protected boolean isExist(final String query, final String... args)
     {
 		return execute(
@@ -85,17 +97,32 @@ public abstract class Table
 		);
     }
 
+    protected boolean isExist(int queryResource, String... args)
+    {
+        return isExist(Utils.getRaw(helper, queryResource), args);
+    }
+
+    protected boolean isExist(SQLiteDatabase db, String query, String... args)
+    {
+        Cursor cursor = query(db, query, args);
+        return cursor.moveToFirst();
+	}
+
+    protected boolean isExist(SQLiteDatabase db, int queryResource, String... args)
+    {
+        return isExist(db, Utils.getRaw(helper, queryResource), args);
+    }
+
     protected Cursor query(SQLiteDatabase db, String query, String... args)
     {
         return db.rawQuery(query, args);
     }
 
-	protected boolean isExist(SQLiteDatabase db, String query, String... args)
+    protected Cursor query(SQLiteDatabase db, int queryResource, String... args)
     {
-		Cursor cursor = query(db, query, args);
-		return cursor.moveToFirst();
-	}
-	
+        return query(db, Utils.getRaw(helper, queryResource), args);
+    }
+
 	protected String selectValue(final String query, final String... args)
     {
 		return execute(
@@ -107,6 +134,11 @@ public abstract class Table
 				}
 			}
 		);
+    }
+
+    protected String selectValue(int queryResource, String... args)
+    {
+        return selectValue(Utils.getRaw(helper, queryResource), args);
     }
 
     protected String selectValue(SQLiteDatabase db, String query, String... args)
@@ -121,13 +153,7 @@ public abstract class Table
 
 	protected boolean isTableExist(SQLiteDatabase db, String table)
 	{
-		return isExist(
-			db,
-			"select 1" +
-			"  from sqlite_master" +
-			" where type = 'table'" +
-			"   and name = ?",
-			table);
+		return isExist(db, R.raw.is_table_exist, table);
 	}
 
     protected boolean isCoumnExist(SQLiteDatabase db, String table, String column)
@@ -147,13 +173,18 @@ public abstract class Table
         }
         return false;
     }
-    
+
     protected void addColumn(SQLiteDatabase db, String table, String column, String type)
     {
         if (isCoumnExist(db, table, column))
         {
             return;
         }
-        db.execSQL("alter table " + table + " add column " + column + " " + type);
+        db.execSQL(
+            Utils.getRaw(
+                helper, R.raw.add_column,
+                "{table}", table,
+                "{column}", column,
+                "{type}", type));
     }
 }
