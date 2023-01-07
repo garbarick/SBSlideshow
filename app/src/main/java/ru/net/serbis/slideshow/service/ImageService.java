@@ -9,6 +9,7 @@ import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.image.*;
 import ru.net.serbis.slideshow.listener.*;
+import ru.net.serbis.slideshow.tools.*;
 
 public class ImageService extends WallpaperService
 {
@@ -17,7 +18,7 @@ public class ImageService extends WallpaperService
     private List<SlideShowEngine> engines = new ArrayList<SlideShowEngine>();
     private SlideShowRunner runner = new SlideShowRunner(this);
     
-    private class SlideShowEngine extends Engine
+    private class SlideShowEngine extends Engine implements ShakeListener.OnShakeListener
     {
         private GestureDetector doubleTapDetector;
         private boolean visible = true;
@@ -40,14 +41,7 @@ public class ImageService extends WallpaperService
             setTouchEventsEnabled(true);
             switchDoubleClickListener();
             
-            shakeListener = new ShakeListener(ImageService.this, new ShakeListener.OnShakeListener()
-            {
-                @Override
-                public void onShake()
-                {
-                    runner.runAction(Action.Next);
-                }
-            });
+            shakeListener = new ShakeListener(ImageService.this, this);
             switchShakeListener();
             
             engines.add(this);
@@ -120,6 +114,13 @@ public class ImageService extends WallpaperService
             {
                 doubleTapDetector.onTouchEvent(event);
             }
+        }
+
+        @Override
+        public void onShake()
+        {
+            new WakeLocker().start(ImageService.this);
+            runner.runAction(Action.Next);
         }
     }
     

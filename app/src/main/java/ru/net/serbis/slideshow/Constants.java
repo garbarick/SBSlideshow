@@ -59,14 +59,14 @@ public interface Constants
 	int MEGA_ERROR_FILE_NOT_FOUND = 401;
 	
 	Parameter ORIENTATION = new Parameter("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-    Map<Integer, Integer> ORIENTATIONS = new LinkedHashMap<Integer, Integer>()
+    Map<Integer, Integer> ORIENTATIONS = new MapHolder<Integer, Integer>()
     {
         {
             put(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED, R.string.bydefault);
             put(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, R.string.portrait);
             put(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, R.string.landscape);
         }
-	};
+	}.get();
     
     Parameter DOUBLE_CLICK_CHANGE = new Parameter("double_click_change", true);
     Parameter SHAKE_CHANGE = new Parameter("shake_change", false);

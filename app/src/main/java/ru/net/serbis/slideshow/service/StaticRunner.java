@@ -3,11 +3,14 @@ package ru.net.serbis.slideshow.service;
 import android.app.*;
 import android.content.*;
 import android.graphics.*;
+import android.util.*;
 import android.view.*;
 import java.io.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.image.*;
 import ru.net.serbis.slideshow.tools.*;
+
+import ru.net.serbis.slideshow.Log;
 
 public class StaticRunner extends Runner
 {
@@ -80,7 +83,7 @@ public class StaticRunner extends Runner
 
     private Point getDisplaySize()
     {
-        android.util.DisplayMetrics metrics = new android.util.DisplayMetrics();
+        DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         display.getMetrics(metrics);
