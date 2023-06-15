@@ -7,6 +7,9 @@ import android.widget.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.adapter.*;
 import ru.net.serbis.slideshow.data.*;
+import ru.net.serbis.slideshow.extension.mega.*;
+import ru.net.serbis.slideshow.extension.share.*;
+
 import ru.net.serbis.slideshow.adapter.Adapter;
 
 public class Folders extends Base<Item>
@@ -50,6 +53,7 @@ public class Folders extends Base<Item>
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         menu.findItem(R.id.add_mega_folder).setEnabled(app.getMegaConnection().isBound());
+        menu.findItem(R.id.add_share_folder).setEnabled(app.getShareConnection().isBound());
         return true;
     }
 
@@ -87,7 +91,8 @@ public class Folders extends Base<Item>
                 return true;
 
             case R.id.add_mega_folder:
-                addMegaFolder();
+            case R.id.add_share_folder:
+                addExtFolder(id);
                 return true;
 
             case R.id.exclude_folder:
@@ -110,13 +115,23 @@ public class Folders extends Base<Item>
         };
     }
 
-    private void addMegaFolder()
+    private void addExtFolder(int id)
     {
-        Intent intent = new Intent();
-        intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_ACCOUNTS);
-        intent.putExtra(Constants.MEGA_SELECT_MODE, true);
-        intent.putExtra(Constants.MEGA_ACTION, Constants.MEGA_ACTION_SELECT_ACCOUNT_PATH);
-        startActivityForResult(intent, Constants.CHOOSE_MEGA_FOLDER);
+        ExtFolders folders = null;
+        switch(id)
+        {
+            case R.id.add_mega_folder:
+                folders = new MegaFolders();
+                break;
+
+            case R.id.add_share_folder:
+                folders = new ShareFolders();
+                break;
+        }
+        if (folders != null)
+        {
+            startActivityForResult(folders.getFoldersIntent(), folders.getFolderResult());
+        }
     }
 
     @Override
@@ -124,15 +139,26 @@ public class Folders extends Base<Item>
     {
         if (RESULT_OK == resultCode)
         {
-            switch (requestCode)
+            try
             {
-                case  Constants.CHOOSE_MEGA_FOLDER:
-                    {
-                        String path = data.getStringExtra(Constants.MEGA_SELECT_PATH);
-                        db.folders.addFolder(new Item(path, FileType.Mega));
-                        refreshAdapter();
-                    }
-                    break;
+                Item item = new MegaFolders().getItem(requestCode, data);
+                if (item != null)
+                {
+                    db.folders.addFolder(item);
+                    refreshAdapter();
+                    return;
+                }
+                item = new ShareFolders().getItem(requestCode, data);
+                if (item != null)
+                {
+                    db.folders.addFolder(item);
+                    refreshAdapter();
+                    return;
+                }
+            }
+            catch (Throwable e)
+            {
+                Log.error(this, e);
             }
         }
     }

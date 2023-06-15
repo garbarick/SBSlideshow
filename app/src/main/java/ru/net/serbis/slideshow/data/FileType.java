@@ -6,6 +6,7 @@ public enum FileType
 {
 	System(R.string.file_type_system),
 	Mega(R.string.file_type_mega),
+    Share(R.string.file_type_share),
 	Default(R.string.file_type_default);
 
 	private int text;

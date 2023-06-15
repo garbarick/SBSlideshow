@@ -7,8 +7,10 @@ import java.util.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
 import ru.net.serbis.slideshow.db.table.*;
+import ru.net.serbis.slideshow.extension.mega.*;
 import ru.net.serbis.slideshow.service.*;
 import ru.net.serbis.slideshow.tools.*;
+import ru.net.serbis.slideshow.extension.share.*;
 
 public class Images
 {
@@ -22,45 +24,56 @@ public class Images
     }
 
     public void init(Runner runner)
-    {        
-        final List<Item> systemFolders = new ArrayList<Item>();
-        List<Item> megaFolders = new ArrayList<Item>();
-        
+    {
+        Map<FileType, List<Item>> folders = new HashMap<FileType, List<Item>>();
+
+        folders.put(FileType.System, new ArrayList<Item>());
+        folders.put(FileType.Mega, new ArrayList<Item>());
+        folders.put(FileType.Share, new ArrayList<Item>());
+
         for (Item folder : db.getFolders())
         {
-			switch(folder.getType())
-			{
-				case Default:
-				case System:
-                    systemFolders.add(folder);
-					break;
-					
-				case Mega:
-					megaFolders.add(folder);
-					break;
-			}
+            FileType type = folder.getType();
+            type = type == FileType.Default ? FileType.System : type;
+            folders.get(type).add(folder);
         }
 
         db.files.clearExist();
+        getFilesList(folders.get(FileType.System));
+	    getExtFilesList(runner, folders);
+    }
+
+    private void getFilesList(final List<Item> folders)
+    {
         db.files.initFiles(
             new FilesFinder()
             {
                 public void find(Files files)
                 {
-                    FileHelper.findFiles(systemFolders, files);
+                    FileHelper.findFiles(folders, files);
                 }
             });
 		UITools.toast(context, "Local Files updated");
+    }
 
-		if (!megaFolders.isEmpty())
-        {
-			new MegaImages(context).getFilesList(runner, megaFolders);
-        }
-		else
-		{
-            db.files.excludeNoExist();
-			runner.drawAction();
-		}
+    private void getExtFilesList(final Runner runner, final Map<FileType, List<Item>> folders)
+    {
+        new MegaImages(context)
+            .getFilesList(
+            runner,
+            folders.get(FileType.Mega),
+            new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    new ShareImages(context)
+                        .getFilesList(
+                        runner,
+                        folders.get(FileType.Share));
+                }
+            }
+        );
     }
 
     public void next(Runner runner)
@@ -88,12 +101,20 @@ public class Images
     public void initCurrent(Maker maker, boolean removeTemp)
     {
 		Item item = db.files.getCurrentItem();
+        if (item == null)
+        {
+            return;
+        }
 		switch(item.getType())
 		{
 			case Mega:
 				new MegaImages(context).getFile(maker, item.getPath(), removeTemp);
 				break;
-			
+
+			case Share:
+                new ShareImages(context).getFile(maker, item.getPath(), removeTemp);
+                break;
+
 			case System:
 				maker.make(item.getPath());
 				break;
@@ -115,10 +136,18 @@ public class Images
 			}
 		};
 		Item item = db.files.getCurrentItem();
+        if (item == null)
+        {
+            return;
+        }
 		switch(item.getType())
 		{
 			case Mega:
 				new MegaImages(context).removeFile(maker, item.getPath());
+				break;
+
+            case Share:
+                new ShareImages(context).removeFile(maker, item.getPath());
 				break;
 
 			case System:

@@ -9,8 +9,7 @@ public interface Constants
 {
 	String WIDGET_PREFERENCE = "widget_preference";
 	String TYPE = Constants.class.getPackage().getName();
-	int CHOOSE_MEGA_FOLDER = 100;
-	
+
 	List<Integer> VIEWS = Arrays.asList
 	(
 		new Integer[]
@@ -35,29 +34,9 @@ public interface Constants
 			"gif"
 		}
 	);
-	
-	String MEGA_PACKAGE = "ru.net.serbis.mega";
-	String MEGA_SERVICE = MEGA_PACKAGE + ".service.FilesService";
-	String MEGA_ACCOUNTS = MEGA_PACKAGE + ".activity.Accounts";
-	String MEGA_SELECT_MODE = MEGA_PACKAGE + ".SELECT_MODE";
-	String MEGA_ACTION = MEGA_PACKAGE + ".ACTION";
-	String MEGA_SELECT_PATH = MEGA_PACKAGE + ".SELECT_PATH";
-	String MEGA_PATH = MEGA_PACKAGE + ".PATH";
-	String MEGA_FILES_LIST = MEGA_PACKAGE + ".FILES_LIST";
-	String MEGA_FILE = MEGA_PACKAGE + ".FILE";
-	String MEGA_RESULT = MEGA_PACKAGE + ".RESULT";
-	String MEGA_ERROR_CODE = MEGA_PACKAGE + ".ERROR_CODE";
-	
-	int MEGA_ACTION_SELECT_ACCOUNT_PATH = 102;
-	int MEGA_ACTION_GET_FILES_LIST = 103;
-	int MEGA_ACTION_GET_FILE = 104;
-	int MEGA_ACTION_REMOVE_FILE = 105;
-	
-	String MEGA_PREFIX = "//sbmega/";
-	String MEGA_SUCCESS = "SUCCESS";
-	
-	int MEGA_ERROR_FILE_NOT_FOUND = 401;
-	
+
+	int ERROR_FILE_NOT_FOUND = 401;
+    
 	Parameter ORIENTATION = new Parameter("orientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     Map<Integer, Integer> ORIENTATIONS = new MapHolder<Integer, Integer>()
     {
@@ -67,7 +46,7 @@ public interface Constants
             put(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, R.string.landscape);
         }
 	}.get();
-    
+
     Parameter DOUBLE_CLICK_CHANGE = new Parameter("double_click_change", true);
     Parameter SHAKE_CHANGE = new Parameter("shake_change", false);
 }

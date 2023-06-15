@@ -5,4 +5,7 @@
     <item
         android:id="@+id/add_mega_folder"
         android:title="@string/add_mega_folder"/>
+    <item
+        android:id="@+id/add_share_folder"
+        android:title="@string/add_share_folder"/>
 </menu>

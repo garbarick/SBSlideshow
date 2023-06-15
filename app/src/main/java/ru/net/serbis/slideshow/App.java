@@ -1,56 +1,40 @@
 package ru.net.serbis.slideshow;
 
 import android.app.*;
-import android.content.*;
-import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.connection.*;
+import ru.net.serbis.slideshow.extension.mega.*;
+import ru.net.serbis.slideshow.extension.share.*;
 
 public class App extends Application
 {
-	private MegaConnection connection = new MegaConnection();
-
+	private ExtConnection megaConnection = new MegaConnection(this);
+    private ExtConnection shareConnection = new ShareConnection(this);
+    
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
-		bindMega();
+        megaConnection.bind();
+        shareConnection.bind();
 	}
 
 	@Override
 	public void onTerminate()
 	{
 		super.onTerminate();
-		unbindMega();
+        megaConnection.unBind();
+        shareConnection.unBind();
 	}
 
-	private void bindMega()
+	public ExtConnection getMegaConnection()
 	{
-		try
-		{
-			if (!connection.isBound())
-			{
-				Intent intent = new Intent();
-				intent.setClassName(Constants.MEGA_PACKAGE, Constants.MEGA_SERVICE);
-				bindService(intent, connection, Context.BIND_AUTO_CREATE | Context.BIND_ADJUST_WITH_ACTIVITY);
-			}
-		}
-		catch (Throwable e)
-		{
-			Log.info(this, e.getMessage());
-		}
+		megaConnection.bind();
+		return megaConnection;
 	}
-
-	private void unbindMega()
-	{
-		if (connection.isBound())
-        {
-            unbindService(connection);
-        }
-	}
-	
-	public MegaConnection getMegaConnection()
-	{
-		bindMega();
-		return connection;
+    
+    public ExtConnection getShareConnection()
+    {
+        shareConnection.bind();
+        return shareConnection;
 	}
 }

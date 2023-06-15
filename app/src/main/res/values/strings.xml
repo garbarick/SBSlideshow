@@ -31,11 +31,13 @@
 
 	<string name="file_type_system">system</string>
 	<string name="file_type_mega">mega</string>
+    <string name="file_type_share">share</string>
 	<string name="file_type_default">default</string>
 
 	<string name="wall_folders">Wallpaper Folders</string>
 	<string name="add_system_folder">Add System Folder</string>
 	<string name="add_mega_folder">Add MEGA Folder</string>
+    <string name="add_share_folder">Add Share Folder</string>
 	<string name="exclude_folder">Exclude Folder</string>
 	<string name="choose_folder">Choose Folder</string>
 

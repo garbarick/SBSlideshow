@@ -1,10 +1,11 @@
 package ru.net.serbis.slideshow.db.table;
 
 import android.database.sqlite.*;
-import android.text.*;
 import ru.net.serbis.slideshow.*;
 import ru.net.serbis.slideshow.data.*;
 import ru.net.serbis.slideshow.db.*;
+import ru.net.serbis.slideshow.extension.mega.*;
+import ru.net.serbis.slideshow.extension.share.*;
 import ru.net.serbis.slideshow.tools.*;
 
 public class Files extends Table
@@ -171,11 +172,21 @@ public class Files extends Table
 		String current = selectValue(R.raw.get_current_item);
         Log.info(this, "current=" + current);
 
-		FileType type = !TextUtils.isEmpty(current) &&
-			current.startsWith(Constants.MEGA_PREFIX) ?
-			FileType.Mega : FileType.System;
-
-		return new Item(current, type);
+        if (current == null)
+        {
+            return null;
+        }
+        Item item = new MegaFolders().getItem(current);
+        if (item != null)
+        {
+            return item;
+        }
+        item = new ShareFolders().getItem(current);
+        if (item != null)
+        {
+            return item;
+        }
+		return new Item(current, FileType.System);
     }
 
     public void deleteCurrent()
