@@ -92,8 +92,8 @@ public abstract class ExtImages
                         if (msg.getData().containsKey(keyFilesList()))
                         {
                             initFilesList(msg.getData().getString(keyFilesList()));
+                            getFilesList(runner, iterator, next);
                         }
-                        getFilesList(runner, iterator, next);
                     }
                 }
             );
