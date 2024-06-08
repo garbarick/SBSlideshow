@@ -77,6 +77,6 @@ public class ShareImages extends ExtImages
     protected void finishFilesList()
     {
         Log.info(this, "share folders finished");
-        UITools.toast(context, "SHARE Files updated");
+        UITools.get().toast(context, "SHARE Files updated");
     }
 }

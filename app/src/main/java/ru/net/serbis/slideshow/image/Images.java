@@ -53,7 +53,7 @@ public class Images
                     FileHelper.findFiles(folders, files);
                 }
             });
-		UITools.toast(context, "Local Files updated");
+		UITools.get().toast(context, "Local Files updated");
     }
 
     private void getExtFilesList(final Runner runner, final Map<FileType, List<Item>> folders)

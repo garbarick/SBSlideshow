@@ -33,6 +33,7 @@ public class Files extends Table
 		{
 			createCurrentTable(db);
 		}
+        executeUpdate(db, R.raw.add_current);
 	}
 
 	private void createFilesTable(SQLiteDatabase db)
@@ -105,6 +106,7 @@ public class Files extends Table
         }
         else
         {
+            executeUpdate(db, R.raw.add_current);
             executeUpdate(db, R.raw.update_current);
         }
 

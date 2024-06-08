@@ -27,7 +27,7 @@ public class SpinnerAdapter extends Adapter<Integer>
 		}
 		
 		Integer value = getItem(position);
-		TextView text = UITools.findView(view, R.id.value);
+		TextView text = UITools.get().findView(view, R.id.value);
 		text.setText(data.get(value));
 		
 		return view;

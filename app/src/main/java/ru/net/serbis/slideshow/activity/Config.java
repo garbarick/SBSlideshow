@@ -25,8 +25,8 @@ public class Config extends Activity
         setContentView(R.layout.config);
         setResult(RESULT_CANCELED);
 
-        createWidget = UITools.findView(this, R.id.createWidget);
-        items = UITools.findView(this, R.id.buttons);
+        createWidget = UITools.get().findView(this, R.id.createWidget);
+        items = UITools.get().findView(this, R.id.buttons);
         widgetId = getIntent().getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         widget = getWidget(this, widgetId);
 

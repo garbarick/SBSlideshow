@@ -41,8 +41,8 @@ public class ControlsAdapter extends Adapter<Action>
         {
             view = makeView(parent);
             holder = new Holder();
-            holder.image = UITools.findView(view, R.id.image);
-            holder.text = UITools.findView(view, R.id.text);
+            holder.image = UITools.get().findView(view, R.id.image);
+            holder.text = UITools.get().findView(view, R.id.text);
 
             view.setTag(holder);
         }

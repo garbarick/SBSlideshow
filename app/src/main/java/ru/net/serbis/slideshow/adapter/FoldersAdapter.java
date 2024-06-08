@@ -28,8 +28,8 @@ public class FoldersAdapter extends Adapter<Item>
 		{
 			view = makeView(parent);
 			holder = new Holder();
-			holder.path = UITools.findView(view, R.id.path);
-			holder.type = UITools.findView(view, R.id.type);
+			holder.path = UITools.get().findView(view, R.id.path);
+			holder.type = UITools.get().findView(view, R.id.type);
 
 			view.setTag(holder);
 		}

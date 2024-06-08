@@ -45,7 +45,7 @@ public class ParametersAdapter extends Adapter<ParameterData>
         ParameterData paramView = getItem(position);
         view = makeView(parent, paramView.getLayoutId());
         
-        TextView text = UITools.findView(view, R.id.name);
+        TextView text = UITools.get().findView(view, R.id.name);
         text.setText(paramView.getNameId());
 
         switch(paramView.getLayoutId())
@@ -64,7 +64,7 @@ public class ParametersAdapter extends Adapter<ParameterData>
     private void initSwitch(View view, ParameterData paramView)
     {
         final Parameter param = paramView.getParam();
-        Switch item = UITools.findView(view, R.id.value);
+        Switch item = UITools.get().findView(view, R.id.value);
         item.setChecked(param.getBoolValue());
         item.setOnCheckedChangeListener(
             new CompoundButton.OnCheckedChangeListener()
@@ -83,7 +83,7 @@ public class ParametersAdapter extends Adapter<ParameterData>
     private void initSpinner(View view, ParameterData paramView)
     {
         final Parameter param = paramView.getParam();
-        Spinner item = UITools.findView(view, R.id.value);
+        Spinner item = UITools.get().findView(view, R.id.value);
         final SpinnerAdapter adapter = new SpinnerAdapter(getContext(), paramView.getData());
         item.setAdapter(adapter);
         int current = param.getIntValue();

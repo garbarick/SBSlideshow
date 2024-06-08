@@ -77,6 +77,6 @@ public class MegaImages extends ExtImages
     protected void finishFilesList()
     {
         Log.info(this, "mega folders finished");
-        UITools.toast(context, "MEGA Files updated");
+        UITools.get().toast(context, "MEGA Files updated");
     }
 }
